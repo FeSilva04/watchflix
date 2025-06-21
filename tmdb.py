@@ -6,4 +6,9 @@ def get_filmes_populares(page=1):
     url = f'https://api.themoviedb.org/3/movie/popular?api_key={API_KEY}&language=pt-BR&page={page}'
     response = requests.get(url)
     data = response.json()
-    return data['results'], data['total_pages']
+
+    total_pages = data.get('total_pages', 1)
+    if total_pages > 500:
+        total_pages = 500
+
+    return data['results'], total_pages

@@ -16,7 +16,19 @@ def filmes():
         page = 1
 
     filmes_populares, total_pages = get_filmes_populares(page)
-    return render_template('filmes.html', filmes=filmes_populares, page=page, total_pages=total_pages)
+
+    # Limita página ao máximo permitido pela API
+    if page > total_pages:
+        page = total_pages
+
+    max_next_pages = min(page + 3, total_pages + 1)
+
+    return render_template('filmes.html',
+                           filmes=filmes_populares,
+                           page=page,
+                           total_pages=total_pages,
+                           max_next_pages=max_next_pages)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
