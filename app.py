@@ -10,9 +10,14 @@ def index():
 
 @app.route('/filmes')
 def filmes():
-    page = request.args.get('page', 1)
+    try:
+        page = int(request.args.get('page', 1))
+    except ValueError:
+        page = 1
+
     filmes_populares = get_filmes_populares(page)
-    return render_template('filmes.html', filmes=filmes_populares)
+    return render_template('filmes.html', filmes=filmes_populares, page=page)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
