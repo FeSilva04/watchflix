@@ -1,0 +1,59 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>WatchList</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="logo">WatchList</div>
+        <nav>
+            <a href="/">Início</a>
+            <a href="/filmes">Filmes</a>
+            <a href="/series">Séries</a>
+            <a href="/minha-lista">Minha Lista</a>
+            <a href="/sobre-nos">Sobre Nós</a>
+            <input type="text" placeholder="Buscar filmes ou séries...">
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <h2>Filmes Populares <a href="/filmes">Ver todos</a></h2>
+            <div class="grid">
+                {% for filme in filmes_populares %}
+                <div class="card">
+                    <img src="https://image.tmdb.org/t/p/w200{{ filme.poster_path }}">
+                    <h3>{{ filme.title }}</h3>
+                    <p>Avaliação: {{ "%.1f"|format(filme.vote_average) }}</p>
+                    <p>Data: {{ filme.release_date[5:7] }}/{{ filme.release_date[0:4] }}</p>
+                    <button>Já assisti</button>
+                    <button>Adicionar à lista</button>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- 
+        <section>
+            <h2>Séries Populares <a href="/filmes">Ver todas</a></h2>
+            <div class="grid">
+                {% for serie in series_populares %}
+                <div class="card">
+                    <img src="https://image.tmdb.org/t/p/w200{{ serie.poster_path }}">
+                    <h3>{{ serie.title }}</h3>
+                    <p>Avaliação: {{ "%.1f"|format(serie.vote_average) }}</p>
+                    <p>Data: {{ serie.release_date[5:7] }}/{{ serie.release_date[0:4] }}</p>
+                    <button>Já assisti</button>
+                    <button>Adicionar à lista</button>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        -->
+        <!-- repita para séries populares, filmes melhores avaliados etc. -->
+    </main>
+</body>
+</html>
