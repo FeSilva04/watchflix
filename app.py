@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    filmes_populares = get_filmes_populares()
+    filmes_populares, _ = get_filmes_populares()
     return render_template('index.html', filmes_populares=filmes_populares)
 
 @app.route('/filmes')
