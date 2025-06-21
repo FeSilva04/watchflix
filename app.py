@@ -26,10 +26,14 @@ def filmes():
     # Limita total de páginas a 500
     if total_pages > 500:
         total_pages = 500
+    
+    # Corrige se usuário tentar acessar página acima do limite
     if page > total_pages:
         page = total_pages
-
-    max_next_pages = min(page + 3, total_pages + 1)
+        if nome:
+            filmes, _ = buscar_filmes_por_nome(nome, page)
+        else:
+            filmes, _ = get_filmes_populares(page)
 
     # Montar URLs da paginação mantendo filtros
     args = request.args.to_dict()
@@ -43,7 +47,6 @@ def filmes():
                            filmes=filmes,
                            page=page,
                            total_pages=total_pages,
-                           max_next_pages=max_next_pages,
                            build_url=build_url)
 
 
