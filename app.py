@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from tmdb import get_filmes_populares, buscar_filmes_por_nome
+from urllib.parse import urlencode
 
 app = Flask(__name__)
 
@@ -30,11 +31,20 @@ def filmes():
 
     max_next_pages = min(page + 3, total_pages + 1)
 
+    # Montar URLs da paginação mantendo filtros
+    args = request.args.to_dict()
+    args.pop('page', None)  # Remove o parâmetro 'page' atual para substituir depois
+
+    def build_url(page_num):
+        args['page'] = page_num
+        return '/filmes?' + urlencode(args)
+
     return render_template('filmes.html',
                            filmes=filmes,
                            page=page,
                            total_pages=total_pages,
-                           max_next_pages=max_next_pages)
+                           max_next_pages=max_next_pages,
+                           build_url=build_url)
 
 
 if __name__ == '__main__':

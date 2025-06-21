@@ -68,20 +68,20 @@
 
             <div class="paginacao" style="text-align:center; margin-top: 30px;">
                 {% if page > 1 %}
-                    <a href="/filmes?page={{ page - 1 }}">← Anterior</a>
+                    <a href="{{ build_url(page - 1) }}">← Anterior</a>
                 {% endif %}
 
                 <!-- Sempre mostra a primeira página -->
                 {% if page == 1 %}
                     <strong style="margin:0 5px;">1</strong>
                 {% else %}
-                    <a href="/filmes?page=1" style="margin:0 5px;">1</a>
+                    <a href="{{ build_url(1) }}" style="margin:0 5px;">1</a>
                 {% endif %}
 
                 <!-- Páginas antes da atual, entre 2 e total_pages-1 -->
                 {% for p in range(page-2, page) %}
                     {% if p > 1 %}
-                        <a href="/filmes?page={{ p }}" style="margin:0 5px;">{{ p }}</a>
+                        <a href="{{ build_url(p) }}" style="margin:0 5px;">{{ p }}</a>
                     {% endif %}
                 {% endfor %}
 
@@ -93,7 +93,7 @@
                 <!-- Páginas depois da atual, entre 2 e total_pages-1 -->
                 {% for p in range(page + 1, page + 3) %}
                     {% if p < total_pages %}
-                        <a href="/filmes?page={{ p }}" style="margin:0 5px;">{{ p }}</a>
+                        <a href="{{ build_url(p) }}" style="margin:0 5px;">{{ p }}</a>
                     {% endif %}
                 {% endfor %}
 
@@ -101,13 +101,14 @@
                 {% if page == total_pages %}
                     <strong style="margin:0 5px;">{{ total_pages }}</strong>
                 {% else %}
-                    <a href="/filmes?page={{ total_pages }}" style="margin:0 5px;">{{ total_pages }}</a>
+                    <a href="{{ build_url(total_pages) }}" style="margin:0 5px;">{{ total_pages }}</a>
                 {% endif %}
 
                 {% if page < total_pages %}
-                    <a href="/filmes?page={{ page + 1 }}">Próximo →</a>
+                    <a href="{{ build_url(page + 1) }}">Próximo →</a>
                 {% endif %}
             </div>
+
 
 
         </div>
