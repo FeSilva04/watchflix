@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from tmdb import get_filmes_populares
+from tmdb import get_filmes_populares, buscar_filmes_por_nome
 
 app = Flask(__name__)
 
