@@ -27,11 +27,12 @@
     </header>
 
     <main>
+        
         <div class="container">
             <div class="filtros">
                 <h3>Filtros</h3>
-                <input type="text" placeholder="Nome do filme">
-                <input type="date" placeholder="Data de lançamento">
+                <input type="text" name="nome" placeholder="Nome do filme" value="{{ request.args.get('nome', '') }}">
+                <input type="date" name="data" placeholder="Data de lançamento">
                 <select>
                     <option>Gênero</option>
                     <option>Ação</option>

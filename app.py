@@ -15,16 +15,23 @@ def filmes():
     except ValueError:
         page = 1
 
-    filmes_populares, total_pages = get_filmes_populares(page)
+    nome = request.args.get('nome', '').strip()
 
-    # Limita página ao máximo permitido pela API
+    if nome:
+        filmes, total_pages = buscar_filmes_por_nome(nome, page)
+    else:
+        filmes, total_pages = get_filmes_populares(page)
+
+    # Limita total de páginas a 500
+    if total_pages > 500:
+        total_pages = 500
     if page > total_pages:
         page = total_pages
 
     max_next_pages = min(page + 3, total_pages + 1)
 
     return render_template('filmes.html',
-                           filmes=filmes_populares,
+                           filmes=filmes,
                            page=page,
                            total_pages=total_pages,
                            max_next_pages=max_next_pages)
