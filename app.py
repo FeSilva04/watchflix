@@ -15,9 +15,8 @@ def filmes():
     except ValueError:
         page = 1
 
-    filmes_populares = get_filmes_populares(page)
-    return render_template('filmes.html', filmes=filmes_populares, page=page)
-
+    filmes_populares, total_pages = get_filmes_populares(page)
+    return render_template('filmes.html', filmes=filmes_populares, page=page, total_pages=total_pages)
 
 if __name__ == '__main__':
     app.run(debug=True)

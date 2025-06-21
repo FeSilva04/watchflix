@@ -31,11 +31,16 @@ nav a {
 .paginacao a {
     background-color: #333;
     color: white;
-    padding: 10px 15px;
+    padding: 8px 12px;
     text-decoration: none;
-    margin: 0 5px;
-    border-radius: 5px;
+    margin: 0 3px;
+    border-radius: 4px;
 }
 .paginacao a:hover {
     background-color: #555;
 }
+.paginacao strong {
+    padding: 8px 12px;
+    margin: 0 3px;
+}
+
