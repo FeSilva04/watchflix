@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from tmdb import get_filmes_populares, buscar_filmes_por_nome
+from tmdb import get_filmes_populares, buscar_filmes_por_nome, buscar_filmes_por_filtros
 from urllib.parse import urlencode
 
 app = Flask(__name__)
