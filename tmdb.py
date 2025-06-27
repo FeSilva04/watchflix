@@ -47,7 +47,7 @@ def buscar_filmes_por_filtros(page, genero=None, nota_min=None, duracao_min=None
     return data.get('results', []), data.get('total_pages', 1)
 
 def get_generos():
-    url = "https://api.themoviedb.org/3/genre/movie/list"
+    url = "https://api.themoviedb.org/3/genre/movie/list?language=pt-BR"
     headers = {
         "accept": "application/json",
         "Authorization": f"Bearer {TOKEN}"
