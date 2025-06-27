@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from tmdb import get_filmes_populares, buscar_filmes_por_nome, buscar_filmes_por_filtros
+from tmdb import get_filmes_populares, buscar_filmes_por_nome, buscar_filmes_por_filtros, get_generos
 from urllib.parse import urlencode
 
 app = Flask(__name__)
@@ -51,11 +51,14 @@ def filmes():
         args['page'] = page_num
         return '/filmes?' + urlencode(args)
 
+    generos = get_generos()
+
     return render_template('filmes.html',
                            filmes=filmes,
                            page=page,
                            total_pages=total_pages,
-                           build_url=build_url)
+                           build_url=build_url,
+                           generos=generos)
 
 
 if __name__ == '__main__':

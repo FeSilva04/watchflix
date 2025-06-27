@@ -1,6 +1,7 @@
 import requests
 
 API_KEY = '0621640672da05dd540952af6c06729b'
+TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwNjIxNjQwNjcyZGEwNWRkNTQwOTUyYWY2YzA2NzI5YiIsIm5iZiI6MTc0ODcwNjA0Ny45MjMsInN1YiI6IjY4M2IyMmZmZGQ2ODYyNGY0OWFkNzY5OSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.MV7w56r-S66s4EqOunQyxoFTAxprwcec1lSAOp1i-og'
 
 def get_filmes_populares(page=1):
     url = f'https://api.themoviedb.org/3/movie/popular?api_key={API_KEY}&language=pt-BR&page={page}'
@@ -45,4 +46,12 @@ def buscar_filmes_por_filtros(page, genero=None, nota_min=None, duracao_min=None
 
     return data.get('results', []), data.get('total_pages', 1)
 
-
+def get_generos():
+    url = "https://api.themoviedb.org/3/genre/movie/list"
+    headers = {
+        "accept": "application/json",
+        "Authorization": f"Bearer {TOKEN}"
+    }
+    response = requests.get(url, headers=headers)
+    data = response.json()
+    return data.get("genres", [])
