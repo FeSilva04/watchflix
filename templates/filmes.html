@@ -35,21 +35,19 @@
                 <form method="get" action="/filmes">
                     <input type="text" name="nome" placeholder="Nome do filme" value="{{ request.args.get('nome', '') }}">
                     <input type="date" name="data" placeholder="Data de lançamento">
-                    <select>
-                        <option>Gênero</option>
-                        <option>Ação</option>
-                        <option>Comédia</option>
-                        <!-- pode ser dinâmico depois -->
+
+                    <select name="genero">
+                        <option value="">Gênero</option>
+                        <option value="28">Ação</option>
+                        <option value="35">Comédia</option>
+                        <option value="18">Drama</option>
+                        <!-- depois fazemos isso dinâmico -->
                     </select>
-                    <select>
-                        <option>Streaming</option>
-                        <option>Netflix</option>
-                        <option>Disney+</option>
-                        <!-- apenas visual -->
-                    </select>
-                    <input type="number" step="0.1" min="0" max="10" placeholder="Avaliação mínima">
-                    <input type="number" min="30" max="300" placeholder="Duração (min)">
-                    <button type="submit">Buscar</button>
+
+                    <input type="number" step="0.1" min="0" max="10" name="nota_min" placeholder="Avaliação mínima">
+                    <input type="number" min="30" max="300" name="duracao_min" placeholder="Duração mínima">
+                    
+                    <button type="submit">Filtrar</button>
                 </form>
             </div>
 

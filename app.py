@@ -17,11 +17,16 @@ def filmes():
         page = 1
 
     nome = request.args.get('nome', '').strip()
+    genero = request.args.get('genero', '').strip()
+    nota_min = request.args.get('nota_min', '').strip()
+    duracao_min = request.args.get('duracao_min', '').strip()
 
+    # Decide qual função da API usar
     if nome:
         filmes, total_pages = buscar_filmes_por_nome(nome, page)
     else:
-        filmes, total_pages = get_filmes_populares(page)
+        filmes, total_pages = buscar_filmes_por_filtros(page, genero, nota_min, duracao_min)
+        # filmes, total_pages = get_filmes_populares(page)
 
     # Limita total de páginas a 500
     if total_pages > 500:
@@ -35,10 +40,13 @@ def filmes():
         else:
             filmes, _ = get_filmes_populares(page)
 
+    # Garante que 'filmes' seja uma lista
+    if not filmes:
+        filmes = []
+
     # Montar URLs da paginação mantendo filtros
     args = request.args.to_dict()
     args.pop('page', None)  # Remove o parâmetro 'page' atual para substituir depois
-
     def build_url(page_num):
         args['page'] = page_num
         return '/filmes?' + urlencode(args)

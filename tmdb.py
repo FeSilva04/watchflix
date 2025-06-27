@@ -25,3 +25,24 @@ def buscar_filmes_por_nome(nome, page=1):
 
     return data['results'], total_pages
 
+def buscar_filmes_por_filtros(page, genero=None, nota_min=None, duracao_min=None):
+    url = f"https://api.themoviedb.org/3/discover/movie"
+    params = {
+        "api_key": API_KEY,
+        "language": "pt-BR",
+        "sort_by": "popularity.desc",
+        "page": page,
+        "with_genres": genero,
+        "vote_average.gte": nota_min,
+        "with_runtime.gte": duracao_min
+    }
+
+    # Remove filtros vazios
+    params = {k: v for k, v in params.items() if v}
+
+    response = requests.get(url, params=params)
+    data = response.json()
+
+    return data.get('results', []), data.get('total_pages', 1)
+
+
