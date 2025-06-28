@@ -44,3 +44,203 @@ nav a {
     margin: 0 3px;
 }
 
+.perfil-container {
+    position: relative;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.perfil-icone {
+    font-size: 32px;
+    cursor: pointer;
+}
+
+.perfil-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+    min-width: 150px;
+}
+
+.perfil-menu a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+}
+
+.perfil-menu a:hover {
+    background-color: #f0f0f0;
+}
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+
+.detalhes-filme-container {
+  max-width: 1000px;
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+}
+
+.topo {
+  display: flex;
+  gap: 20px;
+}
+
+.topo img {
+  border-radius: 8px;
+  max-width: 300px;
+}
+
+.info-principal {
+  flex-grow: 1;
+}
+
+.acoes {
+  margin: 10px 0;
+}
+
+.botao-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 28px;
+  margin-right: 10px;
+  color: #333;
+}
+
+.classificar-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-conteudo {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  z-index: 100;
+  padding: 5px;
+}
+
+.dropdown-conteudo button {
+  background: none;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+}
+
+.conteudo-centralizado {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.conteudo-centralizado iframe {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+.conteudo-centralizado ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.fundo-escuro {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-flutuante {
+    background-color: #1e1e1e;
+    padding: 30px;
+    border-radius: 16px;
+    max-width: 1100px;   /* mais largura */
+    width: 95vw;         /* até 95% da tela */
+    color: white;
+    box-shadow: 0 0 30px rgba(0,0,0,0.6);
+    overflow-y: auto;
+    max-height: 90vh;
+    display: flex;
+    gap: 40px;           /* espaço entre imagem e conteúdo */
+    flex-wrap: wrap;     /* quebra em telas pequenas */
+}
+
+.modal-flutuante img {
+    max-width: 350px;
+    width: 100%;
+    border-radius: 12px;
+    flex-shrink: 0;      /* evita encolher */
+}
+
+.modal-flutuante > div.conteudo-info {
+    flex: 1 1 500px;     /* ocupa o espaço restante, mínimo 500px */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Botões estilo básico: */
+.modal-flutuante button {
+    background-color: #444;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+    width: max-content;
+}
+
+.modal-flutuante button:hover {
+    background-color: #666;
+}
+
+/* SCROLL BAR */
+/* Para navegadores baseados em WebKit (Chrome, Edge, Safari) */
+body::-webkit-scrollbar,
+.modal-flutuante::-webkit-scrollbar {
+  width: 8px;
+}
+
+body::-webkit-scrollbar-track,
+.modal-flutuante::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+body::-webkit-scrollbar-thumb,
+.modal-flutuante::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+body::-webkit-scrollbar-thumb:hover,
+.modal-flutuante::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Firefox */
+body {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}

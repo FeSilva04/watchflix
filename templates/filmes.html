@@ -5,6 +5,7 @@
     <title>Filmes - WatchList</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="shortcut icon" type="image/png" href="../images/Olho.png"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
     <style>
         .container { display: flex; padding: 20px; }
         .filtros { width: 250px; padding-right: 20px; }
@@ -15,21 +16,37 @@
     </style>
 </head>
 <body>
+    <!-- CABEÇALHO -->
     <header>
-        <div class="logo">WatchList</div>
+        <div class="logo">
+            <img src="../images/Logo.png">
+        </div>
+        
         <nav>
             <a href="/">Início</a>
             <a href="/filmes">Filmes</a>
             <a href="/series">Séries</a>
             <a href="/minha-lista">Minha Lista</a>
             <a href="/sobre-nos">Sobre Nós</a>
-            <input type="text" placeholder="Buscar filmes ou séries...">
+
+            <!-- Botão de perfil -->
+            <div class="perfil-container">
+                <span class="material-symbols-outlined perfil-icone" onclick="toggleMenu()">account_circle</span>
+                <div id="perfil-menu" class="perfil-menu">
+                    <a href="/configuracoes">Configurações</a>
+                    <a href="/minha_lista">Minha Lista</a>
+                    <a href="/assistidos">Assistidos</a>
+                    <a href="/logout" style="color: red;">Sair</a>
+                </div>
+            </div>
+
         </nav>
     </header>
 
     <main>
         
         <div class="container">
+
             <div class="filtros">
                 <h3>Filtros</h3>
                 <form method="get" action="/filmes">
@@ -54,15 +71,17 @@
 
             <div class="filmes">
                 {% for filme in filmes %}
-                <div class="card">
-                    <img src="https://image.tmdb.org/t/p/w200{{ filme.poster_path }}">
-                    <h4>{{ filme.title }}</h4>
-                    <p>Avaliação: {{ "%.1f"|format(filme.vote_average) }}</p>
-                    <p>Lançamento: {{ filme.release_date[5:7] }}/{{ filme.release_date[0:4] }}</p>
-                    <p>{{ filme.overview[:150] }}...</p>
-                    <button>Já assisti</button>
-                    <button>Adicionar à lista</button>
-                </div>
+                <a href="{{ url_for('filme_detalhes', movie_id=filme.id) }}" class="card-link">
+                    <div class="card">
+                        <img src="https://image.tmdb.org/t/p/w500{{ filme.poster_path }}" alt="{{ filme.title }}">
+                        <h4>{{ filme.title }}</h4>
+                        <p>Avaliação: {{ "%.1f"|format(filme.vote_average) }}</p>
+                        <p>Lançamento: {{ filme.release_date[5:7] }}/{{ filme.release_date[0:4] }}</p>
+                        <p>{{ filme.overview[:150] }}...</p>
+                        <button>Já assisti</button>
+                        <button>Adicionar à lista</button>
+                    </div>
+                </a>
                 {% endfor %}
             </div>
 
@@ -113,5 +132,22 @@
 
         </div>
     </main>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById("perfil-menu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        }
+
+        // Fecha o menu se clicar fora dele
+        window.addEventListener("click", function (e) {
+            const menu = document.getElementById("perfil-menu");
+            const icon = document.querySelector(".perfil-icone");
+            if (!menu.contains(e.target) && !icon.contains(e.target)) {
+                menu.style.display = "none";
+            }
+        });
+    </script>
+
 </body>
 </html>

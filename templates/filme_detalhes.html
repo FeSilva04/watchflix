@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{ filme.title }} ({{ filme.release_date[:4] }}) - WatchList</title>
+  <link rel="stylesheet" href="../static/style.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+</head>
+<body>
+  <header>
+        <div class="logo">WatchList</div>
+        <nav>
+            <a href="/">Início</a>
+            <a href="/filmes">Filmes</a>
+            <a href="/series">Séries</a>
+            <a href="/minha-lista">Minha Lista</a>
+            <a href="/sobre-nos">Sobre Nós</a>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+        </nav>
+    </header>
+
+  <!-- <main class="detalhes-filme-container"> -->
+
+    <div class="fundo-escuro">
+        <div class="modal-flutuante">
+    
+  
+
+            <button onclick="window.history.back()" style="position: absolute; top: 20px; left: 20px; background: transparent; border: none; font-size: 18px; color: white; cursor: pointer;">← Voltar</button>
+
+
+            <section class="topo">
+                <img src="https://image.tmdb.org/t/p/w500{{ filme.poster_path }}" alt="{{ filme.title }}">
+                
+                <div class="info-principal">
+                    <h1>{{ filme.title }} ({{ filme.release_date[0:4] }})</h1>
+
+                    <p><strong>Classificação Indicativa:</strong> {{ classificacao }}</p>
+
+                    <p><strong>Gêneros:</strong>
+                    {% for genero in filme.genres %}
+                        {{ genero.name }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                    </p>
+
+                    <p><strong>Avaliação dos usuários:</strong>
+                    {{ (filme.vote_average * 10) | round(0) }}% ({{ filme.vote_count }} avaliações)
+                    </p>
+
+                    <p><strong>Diretor:</strong>
+                    {% for pessoa in filme.credits.crew %}
+                        {% if pessoa.job == 'Director' %}
+                        {{ pessoa.name }}
+                        {% endif %}
+                    {% endfor %}
+                    </p>
+
+
+                    <div class="acoes">
+
+                        <!-- Botão "Já assistido" -->
+                        <form method="POST" action="/assistido/{{ filme.id }}" style="display:inline;">
+                            <button title="Já assistido" class="botao-icon" type="submit">
+                            <span class="material-symbols-outlined">check_circle</span>
+                            </button>
+                        </form>
+
+                        <!-- Botão "Minha Lista" -->
+                        <form method="POST" action="/minha_lista/{{ filme.id }}" style="display:inline;">
+                            <button title="Adicionar à minha lista" class="botao-icon" type="submit">
+                            <span class="material-symbols-outlined">bookmark</span>
+                            </button>
+                        </form>
+
+                        <!-- Dropdown de Classificação -->
+                        <div class="classificar-wrapper" style="display: inline-flex; align-items: center; gap: 8px;">
+                            <div class="classificar-dropdown" style="position: relative;">
+                                <button title="Classificar" class="botao-icon" onclick="toggleDropdown(this)">
+                                    <span class="material-symbols-outlined">star</span>
+                                </button>
+                                <div class="dropdown-conteudo" style="display:none; position:absolute; z-index:10;">
+                                    {% for i in range(0, 11) %}
+                                        <button onclick="avaliar({{ i }}, this)">{{ i }}</button>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                             <!-- Mostra nota -->
+                            <span id="nota-usuario" style="font-weight: bold; color: #FFD700;">
+                                {% if nota_usuario is not none %}⭐ {{ nota_usuario }}{% endif %}
+                            </span>
+
+                            <div id="remover-nota-container" style="display: {% if nota_usuario is not none %}inline-block{% else %}none{% endif %};">
+                                <button onclick="removerNota({{ filme.id }})" class="botao-icon" title="Remover avaliação" style="color: red;">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            </div>
+                        
+                    </div>
+
+
+                    <p class="frase">{{ filme.tagline }}</p>
+
+                    <p class="sinopse">{{ filme.overview }}</p>
+                </div>
+            </section>
+
+            <section class="conteudo-centralizado">
+                
+                {% if trailer %}
+                <h2>Trailer</h2>
+                <iframe width="560" height="315"
+                        src="https://www.youtube.com/embed/{{ trailer }}"
+                        title="Trailer do filme"
+                        frameborder="0"
+                        allowfullscreen>
+                </iframe>
+                {% else %}
+                <p><em>Trailer não disponível.</em></p>
+                {% endif %}
+
+
+                {% if streamings %}
+                <h2>Disponível em:</h2>
+                <div class="streamings">
+                    {% for s in streamings %}
+                    <div style="display:inline-block; text-align:center; margin:10px;">
+                        <img src="https://image.tmdb.org/t/p/w45{{ s.logo_path }}" alt="{{ s.provider_name }}">
+                        <p>{{ s.provider_name }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p><em>Não disponível em streamings no Brasil.</em></p>
+                {% endif %}
+
+                {% if elenco %}
+                <h2>Elenco principal</h2>
+                <div class="elenco">
+                    {% for ator in elenco[:8] %}
+                    <div style="display:inline-block; text-align:center; margin:10px;">
+                        {% if ator.profile_path %}
+                        <img src="https://image.tmdb.org/t/p/w185{{ ator.profile_path }}" alt="{{ ator.name }}" style="width:90px; border-radius: 100%;">
+                        {% else %}
+                        <div style="width:90px; height:120px; background:#ccc; border-radius:15%;"></div>
+                        {% endif %}
+                        <p>{{ ator.name }}</p>
+                        <small>{{ ator.character }}</small>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p><em>Elenco não disponível.</em></p>
+                {% endif %}
+            </section>
+        </div>
+    </div>
+
+
+  <!-- </main> -->
+
+    <script>
+        function toggleDropdown(button) {
+            const dropdown = button.nextElementSibling;
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function avaliar(nota, btn) {
+            const dropdown = btn.parentElement;
+
+            fetch(`/classificar/{{ filme.id }}/` + nota, {
+                method: 'POST',
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Atualiza o texto com a nota e fecha o dropdown
+                    const notaUsuarioElem = document.getElementById('nota-usuario');
+                    if (notaUsuarioElem) {
+                        notaUsuarioElem.textContent = `⭐ ${nota}`;
+                    }
+                    dropdown.style.display = 'none';
+
+                    // MOSTRAR O BOTÃO DE REMOVER A NOTA
+                    const removerNotaContainer = document.getElementById('remover-nota-container');
+                    if (removerNotaContainer) {
+                        removerNotaContainer.style.display = 'inline-block';
+                    }
+                } else {
+                    alert('Erro ao enviar avaliação');
+                }
+            })
+            .catch(error => {
+                alert('Erro na rede: ' + error);
+            });
+        }
+
+
+        function removerNota(filmeId) {
+            fetch(`/remover_nota/${filmeId}`, {
+                method: 'POST',
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Limpa o texto da nota e esconde o botão remover
+                    const notaUsuarioElem = document.getElementById('nota-usuario');
+                    if (notaUsuarioElem) {
+                        notaUsuarioElem.textContent = '';
+                    }
+                    const removerNotaContainer = document.getElementById('remover-nota-container');
+                    if (removerNotaContainer) {
+                        removerNotaContainer.style.display = 'none';
+                    }
+                } else {
+                    alert('Erro ao remover avaliação');
+                }
+            })
+            .catch(error => {
+                alert('Erro na rede: ' + error);
+            });
+        }
+
+    </script>
+
+</body>
+</html>
