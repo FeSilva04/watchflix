@@ -6,17 +6,26 @@
     <title>WatchList</title>
     <link rel="shortcut icon" type="image/png" href="../images/Olho.png"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 </head>
 <body>
     <header>
-        <div class="logo">WatchList</div>
+        <div class="logo" style="text-align: center;">WatchList</div>
         <nav>
             <a href="/">Início</a>
             <a href="/filmes">Filmes</a>
             <a href="/series">Séries</a>
-            <a href="/minha-lista">Minha Lista</a>
             <a href="/sobre-nos">Sobre Nós</a>
-            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+            
+            <!-- Botão de perfil -->
+            <div class="perfil-container">
+                <span class="material-symbols-outlined perfil-icone" onclick="toggleMenu()">account_circle</span>
+                <div id="perfil-menu" class="perfil-menu">
+                    <a href="/perfil">Configurações</a>
+                    <a href="/minha_lista">Minha Lista</a>
+                    <a href="/assistidos">Assistidos</a>
+                    <a href="/logout" style="color: red;">Sair</a>
+                </div>
         </nav>
     </header>
 
@@ -25,14 +34,16 @@
             <h2>Filmes Populares <a href="/filmes">Ver todos</a></h2>
             <div class="grid">
                 {% for filme in filmes_populares %}
-                <div class="card">
-                    <img src="https://image.tmdb.org/t/p/w200{{ filme.poster_path }}">
-                    <h3>{{ filme.title }}</h3>
-                    <p>Avaliação: {{ "%.1f"|format(filme.vote_average) }}</p>
-                    <p>Data: {{ filme.release_date[5:7] }}/{{ filme.release_date[0:4] }}</p>
-                    <button>Já assisti</button>
-                    <button>Adicionar à lista</button>
-                </div>
+                <a href="{{ url_for('filme_detalhes', movie_id=filme.id) }}" class="card-link">
+                    <div class="card">
+                        <img src="https://image.tmdb.org/t/p/w200{{ filme.poster_path }}">
+                        <h3>{{ filme.title }}</h3>
+                        <p>Avaliação: {{ "%.1f"|format(filme.vote_average) }}</p>
+                        <p>Data: {{ filme.release_date[5:7] }}/{{ filme.release_date[0:4] }}</p>
+                        <button>Já assisti</button>
+                        <button>Adicionar à lista</button>
+                    </div>
+                </a>
                 {% endfor %}
             </div>
         </section>
@@ -55,6 +66,23 @@
         </section>
         -->
         <!-- repita para séries populares, filmes melhores avaliados etc. -->
+        
     </main>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById("perfil-menu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        }
+
+        // Fecha o menu se clicar fora dele
+        window.addEventListener("click", function (e) {
+            const menu = document.getElementById("perfil-menu");
+            const icon = document.querySelector(".perfil-icone");
+            if (!menu.contains(e.target) && !icon.contains(e.target)) {
+                menu.style.display = "none";
+            }
+        });
+    </script>
 </body>
 </html>

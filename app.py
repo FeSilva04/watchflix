@@ -35,8 +35,8 @@ def login():
         conn.close()
 
         if usuario and usuario[3] == senha:  # senha pura
-            session['usuario'] = {'id': usuario[0], 'nome': usuario[1]}
-            flash("Login bem-sucedido!")
+            session['usuario'] = {'id': usuario[0], 'nome': usuario[1], 'email': usuario[2]}
+            #flash("Login bem-sucedido!", "success")
             return redirect(url_for('home'))
         else:
             flash("Email ou senha incorretos.")
@@ -145,18 +145,21 @@ def filme_detalhes(movie_id):
     streamings = filme.get('watch/providers', {}).get('results', {}).get('BR', {}).get('flatrate', [])
     classificacao = get_classificacao_indicativa(movie_id)
 
+
     usuario_id = session['usuario']['id']
     nota_usuario = None
 
     conn = sqlite3.connect('usuarios.db')
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT nota FROM interacoes
+        SELECT nota, ja_assistido, na_lista FROM interacoes
         WHERE usuario_id = ? AND filme_id = ?
     """, (usuario_id, movie_id))
     resultado = cursor.fetchone()
-    if resultado and resultado[0] is not None:
+    if resultado is not None:
         nota_usuario = resultado[0]
+        ja_assistido = resultado[1]
+        na_lista = resultado[2]
     conn.close()
 
     return render_template('filme_detalhes.html', 
@@ -166,14 +169,17 @@ def filme_detalhes(movie_id):
                            streamings=streamings,
                            classificacao=classificacao,
                            nota_usuario=nota_usuario,
+                           ja_assistido=ja_assistido,
+                           na_lista=na_lista,
                            range=range)
 
-# ASSISTIDOS
+# PÁGINA COM FILMES JÁ ASSISTIDOS
 @app.route('/assistidos')
 @login_required
 def assistidos():
     return "Página dos filmes assistidos"
 
+# BOTÃO JÁ ASSISTIDO
 @app.route('/assistido/<int:filme_id>', methods=['POST'])
 @login_required
 def marcar_assistido(filme_id):
@@ -281,6 +287,140 @@ def remover_nota(filme_id):
     conn.close()
 
     return jsonify({'success': True})
+
+# PERFIL
+@app.route('/perfil', methods=['GET', 'POST'])
+@login_required
+def perfil():
+    usuario = session['usuario']
+
+    conn = sqlite3.connect('usuarios.db')
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+        novo_nome = request.form['nome']
+        nova_senha = request.form['senha']
+
+        cursor.execute("UPDATE usuarios SET nome = ?, senha = ? WHERE id = ?", (novo_nome, nova_senha, usuario['id']))
+        conn.commit()
+        flash('Informações atualizadas com sucesso!')
+
+        # Atualiza o nome na sessão
+        session['usuario']['nome'] = novo_nome
+
+    cursor.execute("SELECT nome, email FROM usuarios WHERE id = ?", (usuario['id'],))
+    nome, email = cursor.fetchone()
+    conn.close()
+
+    return render_template('perfil.html', nome=nome, email=email)
+
+# Alterar nome
+@app.route('/alterar_nome', methods=['POST'])
+@login_required
+def alterar_nome():
+    novo_nome = request.form['novo_nome'].strip()
+    usuario = session['usuario']
+
+    if not novo_nome:
+        flash("O nome não pode ficar vazio.", "error")
+        return redirect(url_for('perfil'))
+
+    conn = sqlite3.connect('usuarios.db')
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT nome FROM usuarios WHERE id = ?", (usuario['id'],))
+    nome_atual = cursor.fetchone()[0]
+
+    if novo_nome == nome_atual:
+        flash("O novo nome é igual ao atual.", "warning")
+    else:
+        cursor.execute("UPDATE usuarios SET nome = ? WHERE id = ?", (novo_nome, usuario['id']))
+        conn.commit()
+        session['usuario']['nome'] = novo_nome
+        flash("Nome alterado com sucesso!", "success")
+
+    conn.close()
+    return redirect(url_for('perfil'))
+
+
+# Alterar e-mail
+@app.route('/alterar_email', methods=['POST'])
+@login_required
+def alterar_email():
+    novo_email = request.form['novo_email']
+    senha_atual = request.form['senha_atual']
+    usuario = session['usuario']
+
+    conn = sqlite3.connect('usuarios.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT senha, email FROM usuarios WHERE id = ?", (usuario['id'],))
+    resultado = cursor.fetchone()
+
+    if not resultado:
+        flash("Usuário não encontrado.", "error")
+    else:
+        senha_correta, email_atual = resultado
+        if senha_atual != senha_correta:
+            flash("Senha Incorreta.", "error")
+        elif novo_email == email_atual:
+            flash("O novo e-mail é igual ao atual.", "warning")
+        else:
+            cursor.execute("UPDATE usuarios SET email = ? WHERE id = ?", (novo_email, usuario['id']))
+            conn.commit()
+            session['usuario']['email'] = novo_email
+            flash("E-mail alterado com sucesso!")
+        
+    conn.close()
+    return redirect(url_for('perfil'))
+
+# Alterar Senha
+@app.route('/alterar_senha', methods=['POST'])
+@login_required
+def alterar_senha():
+    nova_senha = request.form['nova_senha']
+    confirmar_senha = request.form['confirmar_senha']
+    senha_atual = request.form['senha_atual']
+    usuario = session['usuario']
+
+    conn = sqlite3.connect('usuarios.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT senha FROM usuarios WHERE id = ?", (usuario['id'],))
+    senha_correta = cursor.fetchone()[0]
+
+    if senha_atual != senha_correta:
+        flash("Senha atual incorreta.")
+    elif nova_senha != confirmar_senha:
+        flash("As senhas não coincidem.")
+    elif nova_senha == senha_correta:
+        flash("A nova senha não pode ser igual à atual.")
+    elif len(nova_senha) < 6:
+        flash("A nova senha deve ter pelo menos 6 caracteres.")
+    else:
+        cursor.execute("UPDATE usuarios SET senha = ? WHERE id = ?", (nova_senha, usuario['id']))
+        conn.commit()
+        flash("Senha alterada com sucesso!")
+
+    conn.close()
+    return redirect(url_for('perfil'))
+
+
+# Excluir conta
+@app.route('/excluir_conta', methods=['POST'])
+@login_required
+def excluir_conta():
+    usuario_id = session['usuario']['id']
+
+    conn = sqlite3.connect('usuarios.db')
+    cursor = conn.cursor()
+
+    cursor.execute("DELETE FROM interacoes WHERE usuario_id = ?", (usuario_id,))
+    cursor.execute("DELETE FROM usuarios WHERE id = ?", (usuario_id,))
+    conn.commit()
+    conn.close()
+
+    session.pop('usuario', None)
+    flash('Conta excluída com sucesso!')
+    return redirect(url_for('login'))
 
 # Logout
 @app.route('/logout')

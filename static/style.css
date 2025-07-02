@@ -244,3 +244,50 @@ body {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
+
+.flash-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.flash-error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.flash-messages {
+    list-style: none;
+    padding: 10px;
+    margin: 10px auto;
+    width: fit-content;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Destaque ativo */
+.botao-icon.ativo {
+  color: #00e676; /* Verde ou cor que preferir */
+  background-color: #1f1f1f;
+}
+
+/* Destaque do botão de avaliação */
+.botao-icon.avaliado {
+  color: gold;
+  background-color: #97a021;
+  position: relative;
+}
+
+/* Número da nota dentro da estrela */
+.botao-icon .nota-overlay {
+  position: absolute;
+  top: 10%;
+  left: 8px;
+  font-size: 2rem;
+  font-weight: bold;
+  color: rgb(255, 255, 255);
+  pointer-events: none;
+}
+
+

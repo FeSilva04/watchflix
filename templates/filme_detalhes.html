@@ -60,14 +60,14 @@
 
                         <!-- Botão "Já assistido" -->
                         <form method="POST" action="/assistido/{{ filme.id }}" style="display:inline;">
-                            <button title="Já assistido" class="botao-icon" type="submit">
+                            <button title="Já assistido" class="botao-icon {% if ja_assistido %}ativo{% endif %}" type="submit">
                             <span class="material-symbols-outlined">check_circle</span>
                             </button>
                         </form>
 
                         <!-- Botão "Minha Lista" -->
                         <form method="POST" action="/minha_lista/{{ filme.id }}" style="display:inline;">
-                            <button title="Adicionar à minha lista" class="botao-icon" type="submit">
+                            <button title="Adicionar à minha lista" class="botao-icon {% if na_lista %}ativo{% endif %}" type="submit">
                             <span class="material-symbols-outlined">bookmark</span>
                             </button>
                         </form>
@@ -75,8 +75,13 @@
                         <!-- Dropdown de Classificação -->
                         <div class="classificar-wrapper" style="display: inline-flex; align-items: center; gap: 8px;">
                             <div class="classificar-dropdown" style="position: relative;">
-                                <button title="Classificar" class="botao-icon" onclick="toggleDropdown(this)">
-                                    <span class="material-symbols-outlined">star</span>
+                                <button title="Classificar" class="botao-icon {% if nota_usuario is not none %}avaliado{% endif %}" onclick="toggleDropdown(this)">
+                                    <span class="material-symbols-outlined">
+                                        star
+                                    </span>
+                                    {% if nota_usuario is not none %}
+                                        <span class="nota-overlay">{{ nota_usuario }}</span>
+                                    {% endif %}
                                 </button>
                                 <div class="dropdown-conteudo" style="display:none; position:absolute; z-index:10;">
                                     {% for i in range(0, 11) %}

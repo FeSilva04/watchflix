@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  main.container {
+    max-width: 500px;
+    margin: 3rem auto;
+    font-family: Arial, sans-serif;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .info-line {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+  }
+  .info-label {
+    font-weight: 600;
+    display: inline-block;
+    width: 140px;
+  }
+  a.editar-link {
+    margin-left: 10px;
+    cursor: pointer;
+    color: #007bff;
+    text-decoration: underline;
+    font-size: 0.9rem;
+  }
+  a.editar-link:hover {
+    color: #0056b3;
+  }
+  /* Modal */
+  .modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    padding-top: 80px; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+  }
+  .modal-content {
+    background-color: #f9f9f9;
+    margin: auto;
+    padding: 20px;
+    border-radius: 6px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  }
+  .fechar {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+  }
+  .fechar:hover {
+    color: #000;
+  }
+  label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: 600;
+  }
+  input[type="text"], input[type="email"], input[type="password"] {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.3rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  button.submit-btn {
+    margin-top: 1.5rem;
+    background-color: #28a745;
+    color: white;
+    width: 100%;
+    padding: 0.6rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  button.submit-btn:hover {
+    background-color: #1e7e34;
+  }
+  /* Flash messages */
+  ul.flash-messages {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
+  }
+  ul.flash-messages li {
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+  }
+  .flash-success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  .flash-error, .flash-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+</style>
+
+<main class="container">
+  <h1>Perfil</h1>
+
+  <!-- Mensagens flash -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul class="flash-messages">
+        {% for category, message in messages %}
+          <li class="flash-{{ category }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <div class="info-line">
+    <span class="info-label">Seu Nome:</span> {{ session.usuario.nome }}
+    <a class="editar-link" onclick="abrirModal('modal-nome')">Editar</a>
+  </div>
+
+  <div class="info-line">
+    <span class="info-label">E-mail cadastrado:</span> {{ session.usuario.email or 'Não informado' }}
+    <a class="editar-link" onclick="abrirModal('modal-email')">Editar</a>
+  </div>
+
+  <div class="info-line">
+    <span class="info-label">Senha:</span> ********
+    <a class="editar-link" onclick="abrirModal('modal-senha')">Alterar</a>
+  </div>
+
+  <form action="{{ url_for('excluir_conta') }}" method="POST" style="margin-top: 2rem;">
+    <button type="submit" style="background-color: #dc3545; color: white; padding: 0.7rem 1.2rem; border:none; border-radius:4px; cursor:pointer;"
+      onclick="return confirm('Tem certeza que deseja excluir sua conta?');">
+      Excluir Conta
+    </button>
+  </form>
+</main>
+
+<!-- Modal Alterar Nome -->
+<div id="modal-nome" class="modal">
+  <div class="modal-content">
+    <span class="fechar" onclick="fecharModal('modal-nome')">&times;</span>
+    <h3>Alterar Nome</h3>
+    <form method="POST" action="{{ url_for('alterar_nome') }}">
+      <label for="novo_nome">Novo nome:</label>
+      <input type="text" name="novo_nome" value="{{ session.usuario.nome }}" required>
+
+      <label for="senha_atual">Senha atual:</label>
+      <input type="password" name="senha_atual" required>
+
+      <button class="submit-btn" type="submit">Salvar</button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Alterar E-mail -->
+<div id="modal-email" class="modal">
+  <div class="modal-content">
+    <span class="fechar" onclick="fecharModal('modal-email')">&times;</span>
+    <h3>Alterar E-mail</h3>
+    <form method="POST" action="{{ url_for('alterar_email') }}">
+      <label for="novo_email">Novo e-mail:</label>
+      <input type="email" name="novo_email" value="{{ session.usuario.email or '' }}" required>
+
+      <label for="senha_atual">Senha atual:</label>
+      <input type="password" name="senha_atual" required>
+
+      <button class="submit-btn" type="submit">Salvar</button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Alterar Senha -->
+<div id="modal-senha" class="modal">
+  <div class="modal-content">
+    <span class="fechar" onclick="fecharModal('modal-senha')">&times;</span>
+    <h3>Alterar Senha</h3>
+    <form method="POST" action="{{ url_for('alterar_senha') }}">
+      <label for="nova_senha">Nova senha:</label>
+      <input type="password" name="nova_senha" required>
+
+      <label for="confirmar_senha">Confirmar nova senha:</label>
+      <input type="password" name="confirmar_senha" required>
+
+      <label for="senha_atual">Senha atual:</label>
+      <input type="password" name="senha_atual" required>
+
+      <button class="submit-btn" type="submit">Salvar</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  function abrirModal(id) {
+    document.getElementById(id).style.display = 'block';
+  }
+  function fecharModal(id) {
+    document.getElementById(id).style.display = 'none';
+  }
+  // Fecha o modal clicando fora do conteúdo
+  window.onclick = function(event) {
+    ['modal-nome', 'modal-email', 'modal-senha'].forEach(id => {
+      const modal = document.getElementById(id);
+      if (event.target === modal) {
+        modal.style.display = "none";
+      }
+    });
+  }
+</script>
+
+{% endblock %}
