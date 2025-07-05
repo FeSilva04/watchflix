@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>{{ filme.title }} ({{ filme.release_date[:4] }}) - WatchList</title>
+  <title>{{ serie.name }} ({{ serie.first_air_date[:4] }}) - WatchList</title>
   <link rel="stylesheet" href="../static/style.css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 </head>
@@ -24,31 +24,28 @@
     <div class="fundo-escuro">
         <div class="modal-flutuante">
     
-  
-
             <button onclick="window.history.back()" style="position: absolute; top: 20px; left: 20px; background: transparent; border: none; font-size: 18px; color: white; cursor: pointer;">← Voltar</button>
 
-
             <section class="topo">
-                <img src="https://image.tmdb.org/t/p/w500{{ filme.poster_path }}" alt="{{ filme.title }}">
+                <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
                 
                 <div class="info-principal">
-                    <h1>{{ filme.title }} ({{ filme.release_date[0:4] }})</h1>
+                    <h1>{{ serie.name }} ({{ serie.first_air_date[0:4] }})</h1>
 
                     <p><strong>Classificação Indicativa:</strong> {{ classificacao }}</p>
 
                     <p><strong>Gêneros:</strong>
-                    {% for genero in filme.genres %}
+                    {% for genero in serie.genres %}
                         {{ genero.name }}{% if not loop.last %}, {% endif %}
                     {% endfor %}
                     </p>
 
                     <p><strong>Avaliação dos usuários:</strong>
-                    {{ (filme.vote_average * 10) | round(0) }}% ({{ filme.vote_count }} avaliações)
+                    {{ (serie.vote_average * 10) | round(0) }}% ({{ serie.vote_count }} avaliações)
                     </p>
 
                     <p><strong>Diretor:</strong>
-                    {% for pessoa in filme.credits.crew %}
+                    {% for pessoa in serie.credits.crew %}
                         {% if pessoa.job == 'Director' %}
                         {{ pessoa.name }}
                         {% endif %}
@@ -59,14 +56,14 @@
                     <div class="acoes">
 
                         <!-- Botão "Já assistido" -->
-                        <form method="POST" action="/assistido/filme/{{ filme.id }}" style="display:inline;">
+                        <form method="POST" action="/assistido/serie/{{ serie.id }}" style="display:inline;">
                             <button title="Já assistido" class="botao-icon {% if ja_assistido %}ativo{% endif %}" type="submit">
                             <span class="material-symbols-outlined">check_circle</span>
                             </button>
                         </form>
 
                         <!-- Botão "Minha Lista" -->
-                        <form method="POST" action="/minha_lista/filme/{{ filme.id }}" style="display:inline;">
+                        <form method="POST" action="/minha_lista/serie/{{ serie.id }}" style="display:inline;">
                             <button title="Adicionar à minha lista" class="botao-icon {% if na_lista %}ativo{% endif %}" type="submit">
                             <span class="material-symbols-outlined">bookmark</span>
                             </button>
@@ -96,7 +93,7 @@
                             </span>
 
                             <div id="remover-nota-container" style="display: {% if nota_usuario is not none %}inline-block{% else %}none{% endif %};">
-                                <button onclick="removerNota({{ filme.id }})" class="botao-icon" title="Remover avaliação" style="color: red;">
+                                <button onclick="removerNota({{ serie.id }})" class="botao-icon" title="Remover avaliação" style="color: red;">
                                     <span class="material-symbols-outlined">delete</span>
                                 </button>
                             </div>
@@ -104,10 +101,9 @@
                     </div>
 
 
+                    <p class="frase">{{ serie.tagline }}</p>
 
-                    <p class="frase">{{ filme.tagline }}</p>
-
-                    <p class="sinopse">{{ filme.overview }}</p>
+                    <p class="sinopse">{{ serie.overview }}</p>
                 </div>
             </section>
 
@@ -117,7 +113,7 @@
                 <h2>Trailer</h2>
                 <iframe width="560" height="315"
                         src="https://www.youtube.com/embed/{{ trailer }}"
-                        title="Trailer do filme"
+                        title="Trailer da série"
                         frameborder="0"
                         allowfullscreen>
                 </iframe>
@@ -174,7 +170,7 @@
         function avaliar(nota, btn) {
             const dropdown = btn.parentElement;
 
-            fetch(`/classificar/filme/{{ filme.id }}/` + nota, {
+            fetch(`/classificar/serie/{{ serie.id }}/` + nota, {
                 method: 'POST',
             })
             .then(response => {
@@ -201,8 +197,8 @@
         }
 
 
-        function removerNota(filmeId) {
-            fetch(`/remover_nota/filme/${filmeId}`, {
+        function removerNota(serieId) {
+            fetch(`/remover_nota/serie/${serieId}`, {
                 method: 'POST',
             })
             .then(response => {

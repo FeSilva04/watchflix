@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Filmes - WatchList</title>
+    <title>Séries - WatchList</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="shortcut icon" type="image/png" href="../images/Olho.png"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
@@ -49,7 +49,7 @@
 
             <div class="filtros">
                 <h3>Filtros</h3>
-                <form method="get" action="/filmes">
+                <form method="get" action="/series">
                     <input type="text" name="nome" placeholder="Nome do filme" value="{{ request.args.get('nome', '') }}">
                     <input type="date" name="data" placeholder="Data de lançamento">
 
@@ -69,15 +69,15 @@
                 </form>
             </div>
 
-            <div class="filmes">
-                {% for filme in filmes %}
-                <a href="{{ url_for('filme_detalhes', movie_id=filme.id) }}" class="card-link">
+            <div class="series">
+                {% for serie in series %}
+                <a href="{{ url_for('serie_detalhes', serie_id=serie.id) }}" class="card-link">
                     <div class="card">
-                        <img src="https://image.tmdb.org/t/p/w500{{ filme.poster_path }}" alt="{{ filme.title }}">
-                        <h4>{{ filme.title }}</h4>
-                        <p>Avaliação: {{ "%.1f"|format(filme.vote_average) }}</p>
-                        <p>Lançamento: {{ filme.release_date[5:7] }}/{{ filme.release_date[0:4] }}</p>
-                        <p>{{ filme.overview[:150] }}...</p>
+                        <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
+                        <h4>{{ serie.name }} ({{ serie.first_air_date[0:4] }})</h4>
+                        <p>Avaliação: {{ "%.1f"|format(serie.vote_average) }}</p>
+                        <p>Lançamento: {{ serie.first_air_date[5:7] }}/{{ serie.first_air_date[0:4] }}</p>                        
+                        
                         <button>Já assisti</button>
                         <button>Adicionar à lista</button>
                     </div>

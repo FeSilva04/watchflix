@@ -15,7 +15,7 @@
             <a href="/">Início</a>
             <a href="/filmes">Filmes</a>
             <a href="/series">Séries</a>
-            <a href="/sobre-nos">Sobre Nós</a>
+            <a href="/sobre_nos">Sobre Nós</a>
             
             <!-- Botão de perfil -->
             <div class="perfil-container">
@@ -37,9 +37,8 @@
                 <a href="{{ url_for('filme_detalhes', movie_id=filme.id) }}" class="card-link">
                     <div class="card">
                         <img src="https://image.tmdb.org/t/p/w200{{ filme.poster_path }}">
-                        <h3>{{ filme.title }}</h3>
-                        <p>Avaliação: {{ "%.1f"|format(filme.vote_average) }}</p>
-                        <p>Data: {{ filme.release_date[5:7] }}/{{ filme.release_date[0:4] }}</p>
+                        <h3>{{ filme.title }} ({{ filme.release_date[0:4] }})</h3>
+                        <p>Avaliação: {{ (filme.vote_average * 10) | round(0) }}% ({{ filme.vote_count }} avaliações)</p>
                         <button>Já assisti</button>
                         <button>Adicionar à lista</button>
                     </div>
@@ -48,14 +47,14 @@
             </div>
         </section>
 
-        <!-- 
+        
         <section>
-            <h2>Séries Populares <a href="/filmes">Ver todas</a></h2>
+            <h2>Séries Populares <a href="/series">Ver todas</a></h2>
             <div class="grid">
                 {% for serie in series_populares %}
                 <div class="card">
                     <img src="https://image.tmdb.org/t/p/w200{{ serie.poster_path }}">
-                    <h3>{{ serie.title }}</h3>
+                    <h3>{{ serie.name }}</h3>
                     <p>Avaliação: {{ "%.1f"|format(serie.vote_average) }}</p>
                     <p>Data: {{ serie.release_date[5:7] }}/{{ serie.release_date[0:4] }}</p>
                     <button>Já assisti</button>
@@ -64,7 +63,7 @@
                 {% endfor %}
             </div>
         </section>
-        -->
+       
         <!-- repita para séries populares, filmes melhores avaliados etc. -->
         
     </main>

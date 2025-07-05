@@ -18,7 +18,7 @@ def get_filmes_populares(page=1):
     return data['results'], total_pages
 
 def buscar_filmes_por_nome(nome, page=1):
-    url = f"https://api.themoviedb.org/3/search/movie?api_key={API_KEY}&language=pt-BR&query={nome}&page={page}"
+    url = f"https://api.themoviedb.org/3/search/movie?api_key={API_KEY}&language=pt-BR&query={nome}&include_adult=false&page={page}"
     response = requests.get(url)
     data = response.json()
 
@@ -48,7 +48,7 @@ def buscar_filmes_por_filtros(page, genero=None, nota_min=None, duracao_min=None
 
     return data.get('results', []), data.get('total_pages', 1)
 
-def get_generos():
+def get_generos_filmes():
     url = "https://api.themoviedb.org/3/genre/movie/list?language=pt-BR"
     headers = {
         "accept": "application/json",
@@ -109,7 +109,7 @@ def get_streamings_filme(movie_id):
         return providers.get('flatrate', [])
     return []
 
-def get_classificacao_indicativa(movie_id):
+def get_classificacao_indicativa_filme(movie_id):
     url = f"https://api.themoviedb.org/3/movie/{movie_id}/release_dates"
     params = {
         'api_key': API_KEY

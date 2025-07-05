@@ -1,0 +1,136 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>WatchList</title>
+    <link rel="shortcut icon" type="image/png" href="../images/Olho.png"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+
+    <style>
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 60%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 120px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo" style="text-align: center;">WatchList</div>
+        <nav>
+            <a href="/">Início</a>
+            <a href="/filmes">Filmes</a>
+            <a href="/series">Séries</a>
+            <a href="/sobre-nos">Sobre Nós</a>
+            
+            <!-- Botão de perfil -->
+            <div class="perfil-container">
+                <span class="material-symbols-outlined perfil-icone" onclick="toggleMenu()">account_circle</span>
+                <div id="perfil-menu" class="perfil-menu">
+                    <a href="/perfil">Configurações</a>
+                    <a href="/minha_lista">Minha Lista</a>
+                    <a href="/assistidos">Assistidos</a>
+                    <a href="/logout" style="color: red;">Sair</a>
+                </div>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Sobre Nós</h2>
+
+        <h3>Missão</h3>
+        <p>Proporcionar uma plataforma interativa onde amantes do cinema possam descobrir, avaliar e discutir filmes, promovendo uma comunidade engajada que valoriza o conteúdo audiovisual e o compartilhamento de opiniões.</p>
+        
+        <h3>Visão</h3>
+        <p>Ser a principal referência online em avalições e recomendações de filmes, criando um ambiente confiável, democrático e inspirador para cinéfilos de todas as idades.</p>
+
+        <h3>Valores</h3>
+        <ul>
+            <li><b>Transparência:</b> Valorizamos opiniões reais e críticas autênticas.</li>
+            <li><b>Comunidade:</b> Acreditamos na força da troca de experiências.</li>
+            <li><b>Diversidade:</b> Incentivamos a descoberta de filmes de todos os gêneros, países e épocas.</li>
+            <li><b>Respeito:</b> Valorizamos discussões construtivas e respeitosas.</li>
+            <li><b>Inovação:</b> Estamos sempre buscando formas criativas de melhorar a experiências do usuário.</li>
+        </ul>
+
+        <h2>Fale Conosco</h1>
+        <p>Preencha o formulário abaixo para entrar em contato conosco.</p>
+    
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" name="nome" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="telefone">Telefone:</label>
+                <input type="text" id="telefone" name="telefone">
+            </div>
+            
+            <div class="form-group">
+                <label for="assunto">Assunto:</label>
+                <input type="text" id="assunto" name="assunto" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="mensagem">Mensagem:</label>
+                <textarea id="mensagem" name="mensagem" required></textarea>
+            </div>
+            
+            <button type="submit">Enviar Mensagem</button>
+        </form>
+        
+    </main>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById("perfil-menu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        }
+
+        // Fecha o menu se clicar fora dele
+        window.addEventListener("click", function (e) {
+            const menu = document.getElementById("perfil-menu");
+            const icon = document.querySelector(".perfil-icone");
+            if (!menu.contains(e.target) && !icon.contains(e.target)) {
+                menu.style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>
