@@ -1,196 +1,227 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <title>{{ filme.title }} ({{ filme.release_date[:4] }}) - WatchList</title>
-  <link rel="stylesheet" href="../static/style.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-</head>
-<body>
-  <header>
-        <div class="logo">WatchList</div>
-        <nav>
-            <a href="/">Início</a>
-            <a href="/filmes">Filmes</a>
-            <a href="/series">Séries</a>
-            <a href="/minha-lista">Minha Lista</a>
-            <a href="/sobre-nos">Sobre Nós</a>
-            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-        </nav>
-    </header>
+{% extends 'base.html' %}
+{% block content %}
+<title>{{ filme.title }} ({{ filme.release_date[:4] }}) - WatchFlix</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/filme_detalhes.css') }}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
 
-  <!-- <main class="detalhes-filme-container"> -->
-
+<body class="pagina-detalhes">
     <div class="fundo-escuro">
         <div class="modal-flutuante">
-    
-  
-
-            <button onclick="window.history.back()" style="position: absolute; top: 20px; left: 20px; background: transparent; border: none; font-size: 18px; color: white; cursor: pointer;">← Voltar</button>
-
+            <button class="botao-voltar" onclick="window.history.back()">
+                <span class="material-symbols-outlined">arrow_back</span>
+                Voltar
+            </button>
 
             <section class="topo">
-                <img src="https://image.tmdb.org/t/p/w500{{ filme.poster_path }}" alt="{{ filme.title }}">
+                <div class="poster-container">
+                    <img src="https://image.tmdb.org/t/p/w500{{ filme.poster_path }}" alt="{{ filme.title }}" class="poster-filme">
+                    <div class="controles-mobile">
+                        <!-- Controles para mobile -->
+                        <form method="POST" action="/assistido/filme/{{ filme.id }}">
+                            <button class="botao-icon {% if ja_assistido %}ativo{% endif %}" type="submit" title="{% if ja_assistido %}Remover de Assistidos{% else %}Marcar como Assistido{% endif %}">
+                                <span class="material-symbols-outlined">check_circle</span>
+                            </button>
+                        </form>
+                        <form method="POST" action="/minha_lista/filme/{{ filme.id }}">
+                            <button class="botao-icon {% if na_lista %}ativo{% endif %}" type="submit" title="{% if na_lista %}Remover da Minha Lista{% else %}Adicionar à Minha Lista{% endif %}">
+                                <span class="material-symbols-outlined">bookmark</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
                 
                 <div class="info-principal">
-                    <h1>{{ filme.title }} ({{ filme.release_date[0:4] }})</h1>
+                    <div class="cabecalho-mobile">
+                        <h1>{{ filme.title }} <span class="ano">({{ filme.release_date[0:4] }})</span></h1>
+                        <div class="avaliacao-tmdb">
+                            <span class="material-symbols-outlined">star</span>
+                            {{ "%.1f"|format(filme.vote_average) }} <small>/10</small>
+                        </div>
+                    </div>
 
-                    <p><strong>Classificação Indicativa:</strong> {{ classificacao }}</p>
-
-                    <p><strong>Gêneros:</strong>
-                    {% for genero in filme.genres %}
-                        {{ genero.name }}{% if not loop.last %}, {% endif %}
-                    {% endfor %}
-                    </p>
-
-                    <p><strong>Avaliação dos usuários:</strong>
-                    {{ (filme.vote_average * 10) | round(0) }}% ({{ filme.vote_count }} avaliações)
-                    </p>
-
-                    <p><strong>Diretor:</strong>
-                    {% for pessoa in filme.credits.crew %}
-                        {% if pessoa.job == 'Director' %}
-                        {{ pessoa.name }}
-                        {% endif %}
-                    {% endfor %}
-                    </p>
-
+                    <div class="metadados">
+                        <p><span class="rotulo">Classificação:</span> {{ classificacao }}</p>
+                        <p><span class="rotulo">Gêneros:</span>
+                            {% for genero in filme.genres %}
+                                {{ genero.name }}{% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        </p>
+                        <p><span class="rotulo">Duração:</span> {{ filme.runtime // 60 }}h {{ filme.runtime % 60 }}min</p>
+                        <p><span class="rotulo">Diretor:</span>
+                            {% for pessoa in filme.credits.crew %}
+                                {% if pessoa.job == 'Director' %}
+                                {{ pessoa.name }}
+                                {% endif %}
+                            {% endfor %}
+                        </p>
+                    </div>
 
                     <div class="acoes">
-
-                        <!-- Botão "Já assistido" -->
-                        <form method="POST" action="/assistido/filme/{{ filme.id }}" style="display:inline;">
-                            <button title="Já assistido" class="botao-icon {% if ja_assistido %}ativo{% endif %}" type="submit">
-                            <span class="material-symbols-outlined">check_circle</span>
+                        <form method="POST" action="/assistido/filme/{{ filme.id }}">
+                            <button class="botao-acao {% if ja_assistido %}ativo{% endif %}" type="submit">
+                                <span class="material-symbols-outlined">check_circle</span>
+                                <span class="texto">{% if ja_assistido %}Assistido{% else %}Assistir{% endif %}</span>
                             </button>
                         </form>
 
-                        <!-- Botão "Minha Lista" -->
-                        <form method="POST" action="/minha_lista/filme/{{ filme.id }}" style="display:inline;">
-                            <button title="Adicionar à minha lista" class="botao-icon {% if na_lista %}ativo{% endif %}" type="submit">
-                            <span class="material-symbols-outlined">bookmark</span>
+                        <form method="POST" action="/minha_lista/filme/{{ filme.id }}">
+                            <button class="botao-acao {% if na_lista %}ativo{% endif %}" type="submit">
+                                <span class="material-symbols-outlined">bookmark</span>
+                                <span class="texto">Minha Lista</span>
                             </button>
                         </form>
 
-                        <!-- Dropdown de Classificação -->
-                        <div class="classificar-wrapper" style="display: inline-flex; align-items: center; gap: 8px;">
-                            <div class="classificar-dropdown" style="position: relative;">
-                                <button title="Classificar" class="botao-icon {% if nota_usuario is not none %}avaliado{% endif %}" onclick="toggleDropdown(this)">
-                                    <span class="material-symbols-outlined">
-                                        star
-                                    </span>
-                                    {% if nota_usuario is not none %}
-                                        <span class="nota-overlay">{{ nota_usuario }}</span>
-                                    {% endif %}
-                                </button>
-                                <div class="dropdown-conteudo" style="display:none; position:absolute; z-index:10;">
-                                    {% for i in range(0, 11) %}
-                                        <button onclick="avaliar({{ i }}, this)">{{ i }}</button>
+                        <!-- Avaliação do Usuário -->
+                        <div class="avaliacao-usuario">
+                            <button class="botao-acao {% if nota_usuario is not none %}avaliado{% endif %}" onclick="toggleDropdown(this)">
+                                <span class="material-symbols-outlined estrela-avaliada">star</span>
+                                <span class="texto">{% if nota_usuario is not none %}Avaliado{% else %}Avaliar{% endif %}</span>
+                            </button>
+
+                            
+                            <div class="dropdown-avaliacao">
+                                <div class="notas-container">
+                                    {% for i in range(1, 11) %}
+                                        <button class="nota-opcao {% if nota_usuario == i %}selecionada{% endif %}" 
+                                                onclick="avaliar({{ i }})">{{ i }}</button>
                                     {% endfor %}
                                 </div>
                             </div>
-
-                             <!-- Mostra nota -->
-                            <span id="nota-usuario" style="font-weight: bold; color: #FFD700;">
-                                {% if nota_usuario is not none %}⭐ {{ nota_usuario }}{% endif %}
-                            </span>
-
-                            <div id="remover-nota-container" style="display: {% if nota_usuario is not none %}inline-block{% else %}none{% endif %};">
-                                <button onclick="removerNota({{ filme.id }})" class="botao-icon" title="Remover avaliação" style="color: red;">
-                                    <span class="material-symbols-outlined">delete</span>
+                            
+                            {% if nota_usuario is not none %}
+                                <span class="nota-atual">{{ nota_usuario }}/10</span>
+                                <button onclick="removerNota({{ filme.id }})" class="botao-remover">
+                                    <span class="material-symbols-outlined">close</span>
                                 </button>
-                            </div>
-                        
+                            {% endif %}
+                        </div>
                     </div>
 
+                    {% if filme.tagline %}
+                    <p class="tagline">{{ filme.tagline }}</p>
+                    {% endif %}
 
-
-                    <p class="frase">{{ filme.tagline }}</p>
-
-                    <p class="sinopse">{{ filme.overview }}</p>
+                    <div class="sinopse-container">
+                        <h3>Sinopse</h3>
+                        <p class="sinopse">{{ filme.overview }}</p>
+                    </div>
                 </div>
             </section>
 
-            <section class="conteudo-centralizado">
-                
+            <section class="conteudo-secundario">
                 {% if trailer %}
-                <h2>Trailer</h2>
-                <iframe width="560" height="315"
-                        src="https://www.youtube.com/embed/{{ trailer }}"
-                        title="Trailer do filme"
-                        frameborder="0"
-                        allowfullscreen>
-                </iframe>
-                {% else %}
-                <p><em>Trailer não disponível.</em></p>
+                <div class="trailer-container">
+                    <h2><span class="material-symbols-outlined">play_circle</span> Trailer</h2>
+                    <div class="video-wrapper">
+                        <iframe src="https://www.youtube.com/embed/{{ trailer }}" 
+                                title="Trailer do filme {{ filme.title }}"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
                 {% endif %}
 
-
                 {% if streamings %}
-                <h2>Disponível em:</h2>
-                <div class="streamings">
-                    {% for s in streamings %}
-                    <div style="display:inline-block; text-align:center; margin:10px;">
-                        <img src="https://image.tmdb.org/t/p/w45{{ s.logo_path }}" alt="{{ s.provider_name }}">
-                        <p>{{ s.provider_name }}</p>
+                <div class="streamings-container">
+                    <h2><span class="material-symbols-outlined">play_arrow</span> Onde assistir</h2>
+                    <div class="streamings-grid">
+                        {% for s in streamings %}
+                        <div class="streaming-item">
+                            <img src="https://image.tmdb.org/t/p/w92{{ s.logo_path }}" alt="{{ s.provider_name }}" loading="lazy">
+                            <span>{{ s.provider_name }}</span>
+                        </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
                 </div>
-                {% else %}
-                <p><em>Não disponível em streamings no Brasil.</em></p>
                 {% endif %}
 
                 {% if elenco %}
-                <h2>Elenco principal</h2>
-                <div class="elenco">
-                    {% for ator in elenco[:8] %}
-                    <div style="display:inline-block; text-align:center; margin:10px;">
-                        {% if ator.profile_path %}
-                        <img src="https://image.tmdb.org/t/p/w185{{ ator.profile_path }}" alt="{{ ator.name }}" style="width:90px; border-radius: 100%;">
-                        {% else %}
-                        <div style="width:90px; height:120px; background:#ccc; border-radius:15%;"></div>
-                        {% endif %}
-                        <p>{{ ator.name }}</p>
-                        <small>{{ ator.character }}</small>
+                <div class="elenco-container">
+                    <h2><span class="material-symbols-outlined">group</span> Elenco principal</h2>
+                    <div class="elenco-grid">
+                        {% for ator in elenco[:10] %}
+                        <div class="ator-card">
+                            {% if ator.profile_path %}
+                            <img src="https://image.tmdb.org/t/p/w185{{ ator.profile_path }}" alt="{{ ator.name }}" loading="lazy">
+                            {% else %}
+                            <div class="ator-placeholder">
+                                <span class="material-symbols-outlined">person</span>
+                            </div>
+                            {% endif %}
+                            <div class="ator-info">
+                                <strong>{{ ator.name }}</strong>
+                                <span>{{ ator.character }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
                 </div>
-                {% else %}
-                <p><em>Elenco não disponível.</em></p>
                 {% endif %}
             </section>
         </div>
     </div>
 
-
-  <!-- </main> -->
-
     <script>
         function toggleDropdown(button) {
             const dropdown = button.nextElementSibling;
             dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            
+            // Fecha outros dropdowns abertos
+            document.querySelectorAll('.dropdown-avaliacao').forEach(dd => {
+                if (dd !== dropdown) {
+                    dd.style.display = 'none';
+                }
+            });
         }
 
-        function avaliar(nota, btn) {
-            const dropdown = btn.parentElement;
+        // Fecha o dropdown ao clicar fora
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.avaliacao-usuario')) {
+                document.querySelectorAll('.dropdown-avaliacao').forEach(dd => {
+                    dd.style.display = 'none';
+                });
+            }
+        });
 
-            fetch(`/classificar/filme/{{ filme.id }}/` + nota, {
+        function avaliar(nota) {
+            fetch(`/classificar/filme/{{ filme.id }}/${nota}`, {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
             })
             .then(response => {
                 if (response.ok) {
-                    // Atualiza o texto com a nota e fecha o dropdown
-                    const notaUsuarioElem = document.getElementById('nota-usuario');
-                    if (notaUsuarioElem) {
-                        notaUsuarioElem.textContent = `⭐ ${nota}`;
+                    // Atualiza a interface sem recarregar a página toda
+                    const botaoAvaliar = document.querySelector('.avaliacao-usuario .botao-acao');
+                    const notaAtual = document.querySelector('.avaliacao-usuario .nota-atual');
+                    const botaoRemover = document.querySelector('.avaliacao-usuario .botao-remover');
+                    
+                    botaoAvaliar.classList.add('avaliado');
+                    botaoAvaliar.querySelector('.texto').textContent = 'Avaliado';
+                    
+                    if (notaAtual) {
+                        notaAtual.textContent = `${nota}/10`;
+                    } else {
+                        const spanNota = document.createElement('span');
+                        spanNota.className = 'nota-atual';
+                        spanNota.textContent = `${nota}/10`;
+                        botaoAvaliar.parentNode.insertBefore(spanNota, botaoAvaliar.nextSibling);
                     }
-                    dropdown.style.display = 'none';
-
-                    // MOSTRAR O BOTÃO DE REMOVER A NOTA
-                    const removerNotaContainer = document.getElementById('remover-nota-container');
-                    if (removerNotaContainer) {
-                        removerNotaContainer.style.display = 'inline-block';
+                    
+                    if (!botaoRemover) {
+                        const btnRemover = document.createElement('button');
+                        btnRemover.className = 'botao-remover';
+                        btnRemover.innerHTML = '<span class="material-symbols-outlined">close</span>';
+                        btnRemover.onclick = () => removerNota();
+                        botaoAvaliar.parentNode.appendChild(btnRemover);
                     }
+                    
+                    // Fecha o dropdown
+                    document.querySelectorAll('.dropdown-avaliacao').forEach(dd => {
+                        dd.style.display = 'none';
+                    });
                 } else {
                     alert('Erro ao enviar avaliação');
                 }
@@ -200,22 +231,30 @@
             });
         }
 
-
-        function removerNota(filmeId) {
-            fetch(`/remover_nota/filme/${filmeId}`, {
+        function removerNota() {
+            fetch(`/remover_nota/filme/{{ filme.id }}`, {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
             })
             .then(response => {
                 if (response.ok) {
-                    // Limpa o texto da nota e esconde o botão remover
-                    const notaUsuarioElem = document.getElementById('nota-usuario');
-                    if (notaUsuarioElem) {
-                        notaUsuarioElem.textContent = '';
-                    }
-                    const removerNotaContainer = document.getElementById('remover-nota-container');
-                    if (removerNotaContainer) {
-                        removerNotaContainer.style.display = 'none';
-                    }
+                    // Atualiza a interface sem recarregar a página toda
+                    const botaoAvaliar = document.querySelector('.avaliacao-usuario .botao-acao');
+                    const notaAtual = document.querySelector('.avaliacao-usuario .nota-atual');
+                    const botaoRemover = document.querySelector('.avaliacao-usuario .botao-remover');
+                    
+                    botaoAvaliar.classList.remove('avaliado');
+                    botaoAvaliar.querySelector('.texto').textContent = 'Avaliar';
+                    
+                    if (notaAtual) notaAtual.remove();
+                    if (botaoRemover) botaoRemover.remove();
+                    
+                    // Atualiza as estrelas no dropdown
+                    document.querySelectorAll('.nota-opcao').forEach(btn => {
+                        btn.classList.remove('selecionada');
+                    });
                 } else {
                     alert('Erro ao remover avaliação');
                 }
@@ -224,8 +263,7 @@
                 alert('Erro na rede: ' + error);
             });
         }
-
     </script>
-
 </body>
 </html>
+{% endblock %}

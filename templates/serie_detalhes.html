@@ -1,25 +1,11 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <title>{{ serie.name }} ({{ serie.first_air_date[:4] }}) - WatchList</title>
-  <link rel="stylesheet" href="../static/style.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-</head>
-<body>
-  <header>
-        <div class="logo">WatchList</div>
-        <nav>
-            <a href="/">Início</a>
-            <a href="/filmes">Filmes</a>
-            <a href="/series">Séries</a>
-            <a href="/minha-lista">Minha Lista</a>
-            <a href="/sobre-nos">Sobre Nós</a>
-            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-        </nav>
-    </header>
+{% extends 'base.html' %}
+{% block content %}
 
-  <!-- <main class="detalhes-filme-container"> -->
+<title>{{ serie.name }} ({{ serie.first_air_date[:4] }}) - WatchList</title>
+<link rel="stylesheet" href="../static/style.css" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/serie_detalhes.css') }}">
+
+
 
     <div class="fundo-escuro">
         <div class="modal-flutuante">
@@ -223,5 +209,4 @@
 
     </script>
 
-</body>
-</html>
+{% endblock %}

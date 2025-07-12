@@ -8,7 +8,6 @@ def get_filmes_populares(page=1):
     url = f'https://api.themoviedb.org/3/movie/popular?api_key={API_KEY}&language=pt-BR&page={page}'
     response = requests.get(url)
     data = response.json()
-    #print(data)  # DEBUG: veja o que está vindo da API
 
     # Limitar total_pages a 500, pois é o número máximo permitido pela API    
     total_pages = data.get('total_pages', 1)
@@ -29,7 +28,7 @@ def buscar_filmes_por_nome(nome, page=1):
     return data['results'], total_pages
 
 def buscar_filmes_por_filtros(page, genero=None, nota_min=None, duracao_min=None):
-    url = f"https://api.themoviedb.org/3/discover/movie"
+    url = f"https://api.themoviedb.org/3/discover/movie?include_adult=false"
     params = {
         "api_key": API_KEY,
         "language": "pt-BR",

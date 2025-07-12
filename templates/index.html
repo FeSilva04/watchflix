@@ -1,87 +1,92 @@
-<!-- templates/index.html -->
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>WatchList</title>
-    <link rel="shortcut icon" type="image/png" href="../images/Olho.png"/>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-</head>
-<body>
-    <header>
-        <div class="logo" style="text-align: center;">WatchList</div>
-        <nav>
-            <a href="/">Início</a>
-            <a href="/filmes">Filmes</a>
-            <a href="/series">Séries</a>
-            <a href="/sobre_nos">Sobre Nós</a>
-            
-            <!-- Botão de perfil -->
-            <div class="perfil-container">
-                <span class="material-symbols-outlined perfil-icone" onclick="toggleMenu()">account_circle</span>
-                <div id="perfil-menu" class="perfil-menu">
-                    <a href="/perfil">Configurações</a>
-                    <a href="/minha_lista">Minha Lista</a>
-                    <a href="/assistidos">Assistidos</a>
-                    <a href="/logout" style="color: red;">Sair</a>
-                </div>
-        </nav>
-    </header>
+{% extends 'base.html' %}
 
-    <main>
-        <section>
-            <h2>Filmes Populares <a href="/filmes">Ver todos</a></h2>
-            <div class="grid">
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+
+<main class="main-container">
+    <!-- Seção Filmes Populares -->
+    <section class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">Filmes Populares</h2>
+            <a href="/filmes" class="see-all">
+                Ver todos
+                <span class="material-symbols-outlined">chevron_right</span>
+            </a>
+        </div>
+        
+        <div class="carousel-container">
+            <button class="carousel-btn prev-btn" aria-label="Anterior">
+                <span class="material-symbols-outlined">chevron_left</span>
+            </button>
+            
+            <div class="item-carousel">
                 {% for filme in filmes_populares %}
                 <a href="{{ url_for('filme_detalhes', movie_id=filme.id) }}" class="card-link">
-                    <div class="card">
-                        <img src="https://image.tmdb.org/t/p/w200{{ filme.poster_path }}">
-                        <h3>{{ filme.title }} ({{ filme.release_date[0:4] }})</h3>
-                        <p>Avaliação: {{ (filme.vote_average * 10) | round(0) }}% ({{ filme.vote_count }} avaliações)</p>
-                        <button>Já assisti</button>
-                        <button>Adicionar à lista</button>
+                    <div class="item-card">
+                        <img src="https://image.tmdb.org/t/p/w500{{ filme.poster_path }}" class="item-poster" alt="{{ filme.title }}">
+                        <div class="item-info">
+                            <h3 class="item-title">{{ filme.title }}</h3>
+                            <p class="item-meta">
+                                {{ filme.release_date[0:4] }} • {{ (filme.vote_average * 10)|round(0) }}%
+                            </p>
+                            <div class="item-actions">
+                                <button class="watched-btn">Já assisti</button>
+                                <button class="list-btn">+ Lista</button>
+                            </div>
+                        </div>
                     </div>
                 </a>
                 {% endfor %}
             </div>
-        </section>
+            
+            <button class="carousel-btn next-btn" aria-label="Próximo">
+                <span class="material-symbols-outlined">chevron_right</span>
+            </button>
+        </div>
+    </section>
 
+    <!-- Seção Filmes Populares -->
+    <section class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">Séries Populares</h2>
+            <a href="/series" class="see-all">
+                Ver todos
+                <span class="material-symbols-outlined">chevron_right</span>
+            </a>
+        </div>
         
-        <section>
-            <h2>Séries Populares <a href="/series">Ver todas</a></h2>
-            <div class="grid">
+        <div class="carousel-container">
+            <button class="carousel-btn prev-btn" aria-label="Anterior">
+                <span class="material-symbols-outlined">chevron_left</span>
+            </button>
+            
+            <div class="item-carousel">
                 {% for serie in series_populares %}
-                <div class="card">
-                    <img src="https://image.tmdb.org/t/p/w200{{ serie.poster_path }}">
-                    <h3>{{ serie.name }}</h3>
-                    <p>Avaliação: {{ "%.1f"|format(serie.vote_average) }}</p>
-                    <p>Data: {{ serie.release_date[5:7] }}/{{ serie.release_date[0:4] }}</p>
-                    <button>Já assisti</button>
-                    <button>Adicionar à lista</button>
-                </div>
+                <a href="{{ url_for('serie_detalhes', serie_id=serie.id) }}" class="card-link">
+                    <div class="item-card">
+                        <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" class="item-poster" alt="{{ serie.name }}">
+                        <div class="item-info">
+                            <h3 class="item-title">{{ serie.name }}</h3>
+                            <p class="item-meta">
+                                {{ serie.first_air_date[0:4] }} • {{ "%.0f"|format(serie.vote_average) }}/10
+                            </p>
+                            <div class="item-actions">
+                                <button class="watched-btn">Já assisti</button>
+                                <button class="list-btn">+ Lista</button>
+                            </div>
+                        </div>
+                    </div>
+                </a>
                 {% endfor %}
             </div>
-        </section>
-       
-        <!-- repita para séries populares, filmes melhores avaliados etc. -->
-        
-    </main>
+            
+            <button class="carousel-btn next-btn" aria-label="Próximo">
+                <span class="material-symbols-outlined">chevron_right</span>
+            </button>
+        </div>
+    </section>
+    
+</main>
 
-    <script>
-        function toggleMenu() {
-            const menu = document.getElementById("perfil-menu");
-            menu.style.display = menu.style.display === "block" ? "none" : "block";
-        }
-
-        // Fecha o menu se clicar fora dele
-        window.addEventListener("click", function (e) {
-            const menu = document.getElementById("perfil-menu");
-            const icon = document.querySelector(".perfil-icone");
-            if (!menu.contains(e.target) && !icon.contains(e.target)) {
-                menu.style.display = "none";
-            }
-        });
-    </script>
-</body>
-</html>
+<script src="{{ url_for('static', filename='js/carousel.js') }}"></script>
+{% endblock %}

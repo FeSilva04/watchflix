@@ -1,27 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - WatchFlix</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 </head>
 <body>
-    <h2>Login</h2>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="login-logo">WATCHFLIX</div>
+            <h1 class="login-title">Entrar</h1>
+        </div>
 
-    {% with mensagens = get_flashed_messages() %}
-      {% if mensagens %}
-        <ul>
-          {% for msg in mensagens %}
-            <li style="color: red;">{{ msg }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
+        <div class="flash-messages">
+            {% with mensagens = get_flashed_messages() %}
+                {% if mensagens %}
+                    {% for msg in mensagens %}
+                        <div class="flash-message">{{ msg }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
 
-    <form method="POST">
-        <input type="email" name="email" placeholder="Email" required><br><br>
-        <input type="password" name="senha" placeholder="Senha" required><br><br>
-        <button type="submit">Entrar</button>
-    </form>
+        <form class="login-form" method="POST">
+            <input class="form-input" type="email" name="email" placeholder="Email" required>
+            <input class="form-input" type="password" name="senha" placeholder="Senha" required>
+            <button class="submit-btn" type="submit">Entrar</button>
+        </form>
 
-    <p><a href="/cadastro">Não tem uma conta? Cadastre-se</a></p>
+        <div class="signup-link">
+            <p>Novo na WatchFlix? <a href="/cadastro">Assine agora</a></p>
+        </div>
+    </div>
 </body>
 </html>

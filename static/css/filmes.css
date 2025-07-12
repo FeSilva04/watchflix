@@ -1,0 +1,358 @@
+/* Estilos Gerais */
+:root {
+  --primary: #e50914;
+  --primary-dark: #b2070f;
+  --dark: #141414;
+  --dark-gray: #222;
+  --medium-gray: #757575;
+  --light-gray: #e6e6e6;
+  --white: #ffffff;
+  --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Layout Principal */
+.container {
+  display: flex;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  gap: 2rem;
+}
+
+/* Seção de Filtros */
+.filtros {
+  width: 280px;
+  padding: 1.5rem;
+  background-color: var(--dark-gray);
+  border-radius: 8px;
+  height: fit-content;
+  position: sticky;
+  top: 1rem;
+}
+
+.filtros h3 {
+  color: var(--white);
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+  border-bottom: 2px solid var(--primary);
+  padding-bottom: 0.5rem;
+}
+
+.filtros input,
+.filtros select {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #333;
+  color: var(--white);
+  font-size: 0.9rem;
+}
+
+.filtros input:focus,
+.filtros select:focus {
+  outline: 2px solid var(--primary);
+}
+
+.filtros button {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: var(--transition);
+}
+
+.filtros button:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* Estilos para os botões de filtro */
+.filtros-botoes {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem; /* Aumentei o espaçamento */
+}
+
+.btn-filtrar {
+    flex: 1;
+    padding: 0.8rem;
+    min-height: 44px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-width: 150px; /* Largura mínima maior */
+}
+
+.btn-limpar {
+    width: 44px; /* Largura igual à altura */
+    min-height: 44px; /* Mesma altura do botão Filtrar */
+    padding: 0;
+    background-color: #333;
+    color: var(--white);
+    border: 1px solid var(--medium-gray);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.btn-filtrar, .btn-limpar {
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-filtrar:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.btn-limpar:hover {
+    background-color: #444;
+    border-color: var(--light-gray);
+}
+
+.btn-limpar .material-symbols-outlined {
+    font-size: 1.5rem;
+}
+
+/* Tooltip estilizado */
+.btn-limpar .tooltip {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 0.5rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    margin-top: 10px;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.btn-limpar .tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent rgba(0, 0, 0, 0.8) transparent;
+}
+
+.btn-limpar:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+    margin-top: 5px;
+}
+
+/* Efeito de clique */
+.btn-limpar:active {
+    transform: scale(0.95);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .filtros-botoes {
+        flex-direction: row;
+    }
+    
+    .btn-limpar {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .btn-limpar .tooltip {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+    }
+}
+
+/* Grid de Filmes */
+.filmes {
+  flex-grow: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background-color: var(--dark-gray);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: var(--transition);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(229, 9, 20, 0.3);
+}
+
+.card img {
+  width: 100%;
+  height: 330px;
+  object-fit: cover;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-content {
+  padding: 1rem;
+}
+
+.card h4 {
+  color: var(--white);
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card p {
+  color: var(--medium-gray);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.card .overview {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--light-gray);
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin-bottom: 1rem;
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.card-actions button {
+  flex: 1;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.8rem;
+  transition: var(--transition);
+}
+
+/* Remove sublinhado dos links dos cards */
+.card-link {
+    text-decoration: none !important;
+}
+
+.card-link:hover {
+    text-decoration: none !important;
+}
+
+.watched-btn {
+  background-color: rgba(229, 9, 20, 0.2);
+  color: var(--white);
+  border: 1px solid var(--primary) !important;
+}
+
+.watched-btn:hover {
+  background-color: var(--primary);
+}
+
+.list-btn {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--white);
+}
+
+.list-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Paginação */
+.paginacao {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  padding: 1rem 0;
+}
+
+.paginacao a, 
+.paginacao strong {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: var(--transition);
+}
+
+.paginacao a {
+  color: var(--white);
+  text-decoration: none;
+  background-color: var(--dark-gray);
+}
+
+.paginacao a:hover {
+  background-color: var(--primary);
+}
+
+.paginacao strong {
+  background-color: var(--primary);
+  color: white;
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+  .container {
+    flex-direction: column;
+    padding: 1rem;
+  }
+  
+  .filtros {
+    width: 100%;
+    position: static;
+    margin-bottom: 1.5rem;
+  }
+  
+  .filmes {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .filmes {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+  
+  .card img {
+    height: 250px;
+  }
+  
+  .paginacao {
+    flex-wrap: wrap;
+  }
+}

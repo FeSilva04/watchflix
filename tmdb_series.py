@@ -5,10 +5,9 @@ TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwNjIxNjQwNjcyZGEwNWRkNTQwOTUyYWY2YzA2Nz
 BASE_URL = 'https://api.themoviedb.org/3'
 
 def get_series_populares(page=1):
-    url = f'"https://api.themoviedb.org/3/tv/popular?api_key={API_KEY}&include_adult=false&language=pt-BR&page={page}"'
+    url = f'https://api.themoviedb.org/3/tv/popular?api_key={API_KEY}&language=pt-BR&page={page}'
     response = requests.get(url)
     data = response.json()
-    #print(data)  # DEBUG: veja o que está vindo da API
 
     # Limitar total_pages a 500, pois é o número máximo permitido pela API    
     total_pages = data.get('total_pages', 1)
@@ -110,7 +109,7 @@ def get_streamings_serie(serie_id):
         return providers.get('flatrate', [])
     return []
 
-def get_classificacao_indicativa(serie_id):
+def get_classificacao_indicativa_serie(serie_id):
     url = f"https://api.themoviedb.org/3/TV/{serie_id}/release_dates"
     params = {
         'api_key': API_KEY

@@ -1,0 +1,134 @@
+.pagina-lista {
+  color: #fff;
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+.pagina-lista h1 {
+  color: #e50914;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #a30a0a;
+  padding-bottom: 0.5rem;
+}
+
+.secao-lista {
+  margin-bottom: 2rem;
+}
+
+.secao-lista h2 {
+  color: #fff;
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+}
+
+.grid-itens {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  color: #fff;
+  background: #181818;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  text-decoration: none;
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: scale(1.03);
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.card .titulo {
+  font-weight: bold;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.card .ano {
+  color: #a3a3a3;
+  padding: 0 0.5rem 0.5rem;
+  font-size: 0.9rem;
+}
+
+.mensagem-vazia {
+  text-align: center;
+  color: #555;
+  font-size: 1.2rem;
+  margin-top: 3rem;
+}
+
+/* Efeitos Especiais */
+.card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.card:hover::after {
+    opacity: 1;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .pagina-lista {
+        padding: 1rem;
+    }
+    
+    .pagina-lista h1 {
+        font-size: 2rem;
+    }
+    
+    .grid-itens {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .grid-itens {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+    
+    .card .titulo {
+        font-size: 0.85rem;
+    }
+    
+    .card .ano {
+        font-size: 0.75rem;
+    }
+}
+
+/* Efeito de Carregamento (opcional) */
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+.skeleton {
+    animation: pulse 1.5s infinite ease-in-out;
+    background-color: #2a2a2a;
+}
+
+.skeleton-text {
+    height: 1rem;
+    width: 80%;
+    margin: 0.5rem;
+    border-radius: 4px;
+}

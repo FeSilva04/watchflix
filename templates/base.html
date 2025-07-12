@@ -3,21 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <title>WatchFlix</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link rel="shortcut icon" type="image/png" href="../static/images/olho.png"/>
 </head>
 <body>
 
     <header>
+        <div class="logo-container">
+            <a href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo WatchFlix" class="logo">
+            </a>
+        </div>
+
         <nav>
             <a href="{{ url_for('home') }}">Início</a>
             <a href="{{ url_for('filmes') }}">Filmes</a>
             <a href="{{ url_for('series') }}">Séries</a>
-            <a href="{{ url_for('minha_lista') }}">Minha Lista</a>
             <a href="{{ url_for('sobre_nos') }}">Sobre Nós</a>
-            <a href="{{ url_for('logout') }}">Sair</a>
+
+            <div class="perfil-container" style="position: relative;">
+                <span class="material-symbols-outlined perfil-icone" onclick="toggleMenu()">account_circle</span>
+                <div id="perfil-menu" class="perfil-menu">
+                    <a href="/perfil">Configurações</a>
+                    <a href="/minha_lista">Minha Lista</a>
+                    <a href="/assistidos">Assistidos</a>
+                    <a href="/logout" style="color: red;">Sair</a>
+                </div>
+            </div>
+
         </nav>
     </header>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('perfil-menu');
+            if (menu.style.display === 'block') {
+                menu.style.display = 'none';
+            } else {
+                menu.style.display = 'block';
+            }
+        }
+
+        window.addEventListener("click", function (e) {
+            const menu = document.getElementById("perfil-menu");
+            const icon = document.querySelector(".perfil-icone");
+            if (!menu.contains(e.target) && !icon.contains(e.target)) {
+                menu.style.display = "none";
+            }
+        });
+    </script>
 
     {% block content %}{% endblock %}
 

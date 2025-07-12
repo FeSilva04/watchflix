@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, session, url_for, f
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 from tmdb_movies import get_filmes_populares, buscar_filmes_por_nome, buscar_filmes_por_filtros, get_generos_filmes, get_detalhes_filme, get_trailer_filme, get_elenco_filme, get_streamings_filme, get_classificacao_indicativa_filme
-from tmdb_series import get_series_populares, buscar_series_por_nome, buscar_series_por_filtros, get_generos_series, get_detalhes_serie, get_trailer_serie, get_elenco_serie, get_streamings_serie, get_classificacao_indicativa
+from tmdb_series import get_series_populares, buscar_series_por_nome, buscar_series_por_filtros, get_generos_series, get_detalhes_serie, get_trailer_serie, get_elenco_serie, get_streamings_serie, get_classificacao_indicativa_serie
 from urllib.parse import urlencode
 from functools import wraps
 from builtins import range
@@ -73,7 +73,8 @@ def cadastro():
 @login_required
 def home():
     filmes_populares, total_pages = get_filmes_populares(1)
-    return render_template('index.html', filmes_populares=filmes_populares)
+    series_populares, total_pages = get_series_populares(1)
+    return render_template('index.html', filmes_populares=filmes_populares, series_populares=series_populares)
 
 # Sobre Nós
 @app.route('/sobre_nos')
@@ -279,7 +280,7 @@ def filme_detalhes(movie_id):
     trailer = get_trailer_filme(movie_id)
     elenco = filme.get('credits', {}).get('cast', [])
     streamings = filme.get('watch/providers', {}).get('results', {}).get('BR', {}).get('flatrate', [])
-    classificacao = get_classificacao_indicativa(movie_id)
+    classificacao = get_classificacao_indicativa_filme(movie_id)
 
 
     usuario_id = session['usuario']['id']
@@ -375,7 +376,7 @@ def serie_detalhes(serie_id):
     trailer = get_trailer_serie(serie_id)
     elenco = serie.get('credits', {}).get('cast', [])
     streamings = serie.get('watch/providers', {}).get('results', {}).get('BR', {}).get('flatrate', [])
-    classificacao = get_classificacao_indicativa(serie_id)
+    classificacao = get_classificacao_indicativa_serie(serie_id)
 
 
     usuario_id = session['usuario']['id']
@@ -412,7 +413,28 @@ def serie_detalhes(serie_id):
 @app.route('/assistidos')
 @login_required
 def assistidos():
-    return "Página dos filmes assistidos"
+    usuario_id = session['usuario']['id']
+    conn = sqlite3.connect('watchflix.db')
+    cursor = conn.cursor()
+
+    # Filmes na lista
+    cursor.execute('''
+        SELECT item_id FROM interacoes_filmes
+        WHERE usuario_id = ? AND ja_assistido = 1
+    ''', (usuario_id,))
+    filmes_ids = [row[0] for row in cursor.fetchall()]
+    filmes = [get_detalhes_filme(movie_id) for movie_id in filmes_ids]
+
+    # Séries na lista
+    cursor.execute('''
+        SELECT item_id FROM interacoes_series
+        WHERE usuario_id = ? AND ja_assistido = 1
+    ''', (usuario_id,))
+    series_ids = [row[0] for row in cursor.fetchall()]
+    series = [get_detalhes_serie(serie_id) for serie_id in series_ids]
+
+    conn.close()
+    return render_template('assistidos.html', filmes=filmes, series=series)
 
 # BOTÃO JÁ ASSISTIDO PARA FILME
 @app.route('/assistido/filme/<int:filme_id>', methods=['POST'])
@@ -434,12 +456,12 @@ def marcar_assistido_filme(filme_id):
         novo_valor = 0 if resultado[0] == 1 else 1
         cursor.execute("""
             UPDATE interacoes_filmes SET ja_assistido = ?
-            WHERE usuario_id = ? AND filme_id = ?
+            WHERE usuario_id = ? AND item_id = ?
         """, (novo_valor, usuario_id, filme_id))
     else:
         # Não existe, então cria a entrada com ja_assistido = 1
         cursor.execute("""
-            INSERT INTO interacoes_filmes (usuario_id, filme_id, ja_assistido)
+            INSERT INTO interacoes_filmes (usuario_id, item_id, ja_assistido)
             VALUES (?, ?, 1)
         """, (usuario_id, filme_id))
 
@@ -484,7 +506,28 @@ def marcar_assistido_serie(serie_id):
 @app.route('/minha_lista')
 @login_required
 def minha_lista():
-    return "Aqui está sua lista de filmes"
+    usuario_id = session['usuario']['id']
+    conn = sqlite3.connect('watchflix.db')
+    cursor = conn.cursor()
+
+    # Filmes na lista
+    cursor.execute('''
+        SELECT item_id FROM interacoes_filmes
+        WHERE usuario_id = ? AND na_lista = 1
+    ''', (usuario_id,))
+    filmes_ids = [row[0] for row in cursor.fetchall()]
+    filmes = [get_detalhes_filme(movie_id) for movie_id in filmes_ids]
+
+    # Séries na lista
+    cursor.execute('''
+        SELECT item_id FROM interacoes_series
+        WHERE usuario_id = ? AND na_lista = 1
+    ''', (usuario_id,))
+    series_ids = [row[0] for row in cursor.fetchall()]
+    series = [get_detalhes_serie(serie_id) for serie_id in series_ids]
+
+    conn.close()
+    return render_template('minha_lista.html', filmes=filmes, series=series)
 
 # BOTÃO MINHA LISTA PARA FILME
 @app.route('/minha_lista/filme/<int:filme_id>', methods=['POST'])
@@ -634,7 +677,6 @@ def logout():
     session.pop('usuario', None)
     flash('Você saiu da conta.')
     return redirect(url_for('login'))
-
 
 
 if __name__ == '__main__':

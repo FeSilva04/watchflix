@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/assistidos.css') }}">
+
+<main class="pagina-lista">
+    <h1>Assistidos</h1>
+
+    {% if not filmes and not series %}
+        <p class="mensagem-vazia">Você ainda não adicionou nada aos assistidos.</p>
+    {% endif %}
+
+    {% if filmes %}
+    <section class="secao-lista">
+        <h2>Filmes</h2>
+        <div class="grid-itens">
+            {% for f in filmes %}
+            <a href="{{ url_for('filme_detalhes', movie_id=f['id']) }}" class="card">
+                <img src="https://image.tmdb.org/t/p/w342{{ f['poster_path'] }}" alt="{{ f['title'] }}">
+                <div class="titulo">{{ f['title'] }}</div>
+                <div class="ano">{{ f['release_date'][:4] }}</div>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    {% if series %}
+    <section class="secao-lista">
+        <h2>Séries</h2>
+        <div class="grid-itens">
+            {% for s in series %}
+            <a href="{{ url_for('serie_detalhes', serie_id=s['id']) }}" class="card">
+                <img src="https://image.tmdb.org/t/p/w342{{ s['poster_path'] }}" alt="{{ s['name'] }}">
+                <div class="titulo">{{ s['name'] }}</div>
+                <div class="ano">{{ s['first_air_date'][:4] }}</div>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+</main>
+{% endblock %}

@@ -1,92 +1,37 @@
-<!-- templates/index.html -->
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>WatchList</title>
-    <link rel="shortcut icon" type="image/png" href="../images/Olho.png"/>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+{% extends 'base.html' %}
 
-    <style>
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input[type="text"],
-        input[type="email"],
-        textarea {
-            width: 60%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        textarea {
-            height: 120px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
+{% block content %}
 
-    </style>
-</head>
-<body>
-    <header>
-        <div class="logo" style="text-align: center;">WatchList</div>
-        <nav>
-            <a href="/">Início</a>
-            <a href="/filmes">Filmes</a>
-            <a href="/series">Séries</a>
-            <a href="/sobre-nos">Sobre Nós</a>
-            
-            <!-- Botão de perfil -->
-            <div class="perfil-container">
-                <span class="material-symbols-outlined perfil-icone" onclick="toggleMenu()">account_circle</span>
-                <div id="perfil-menu" class="perfil-menu">
-                    <a href="/perfil">Configurações</a>
-                    <a href="/minha_lista">Minha Lista</a>
-                    <a href="/assistidos">Assistidos</a>
-                    <a href="/logout" style="color: red;">Sair</a>
-                </div>
-        </nav>
-    </header>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sobre_nos.css') }}">
 
     <main>
         <h2>Sobre Nós</h2>
 
-        <h3>Missão</h3>
-        <p>Proporcionar uma plataforma interativa onde amantes do cinema possam descobrir, avaliar e discutir filmes, promovendo uma comunidade engajada que valoriza o conteúdo audiovisual e o compartilhamento de opiniões.</p>
-        
-        <h3>Visão</h3>
-        <p>Ser a principal referência online em avalições e recomendações de filmes, criando um ambiente confiável, democrático e inspirador para cinéfilos de todas as idades.</p>
+        <section>
+            <h3>Missão</h3>
+            <p>Proporcionar uma plataforma interativa onde amantes do cinema possam descobrir, avaliar e discutir filmes, promovendo uma comunidade engajada que valoriza o conteúdo audiovisual e o compartilhamento de experiências.</p>
+        </section>
+          
+        <section>
+            <h3>Visão</h3>
+            <p>Tornar-se a principal referência online em avaliações e recomendações de filmes, oferecendo um ambiente seguro, democrático e inspirador para cinéfilos de todas as idades.</p>
+        </section>
 
-        <h3>Valores</h3>
-        <ul>
-            <li><b>Transparência:</b> Valorizamos opiniões reais e críticas autênticas.</li>
-            <li><b>Comunidade:</b> Acreditamos na força da troca de experiências.</li>
-            <li><b>Diversidade:</b> Incentivamos a descoberta de filmes de todos os gêneros, países e épocas.</li>
-            <li><b>Respeito:</b> Valorizamos discussões construtivas e respeitosas.</li>
-            <li><b>Inovação:</b> Estamos sempre buscando formas criativas de melhorar a experiências do usuário.</li>
-        </ul>
+        <section>
+            <h3>Valores</h3>
+            <ul>
+                <li><b>Transparência:</b> Valorizamos opiniões e críticas autênticas</li>
+                <li><b>Comunidade:</b> Apreciamos a troca de experiências pessoais</li>
+                <li><b>Diversidade:</b> Incentivamos a descoberta de filmes de todos os gêneros, países e épocas</li>
+                <li><b>Respeito:</b> Prezamos por discussões construtivas e respeitosas</li>
+                <li><b>Inovação:</b> Buscamos continuamente formas criativas de melhorar a experiência do usuário</li>
+            </ul>
+        </section>
 
         <h2>Fale Conosco</h1>
         <p>Preencha o formulário abaixo para entrar em contato conosco.</p>
     
-        <form action="#" method="post">
+        <form action="#" method="post" class="contato-form">
             <div class="form-group">
                 <label for="nome">Nome:</label>
                 <input type="text" id="nome" name="nome" required>
@@ -114,23 +59,7 @@
             
             <button type="submit">Enviar Mensagem</button>
         </form>
-        
+
     </main>
 
-    <script>
-        function toggleMenu() {
-            const menu = document.getElementById("perfil-menu");
-            menu.style.display = menu.style.display === "block" ? "none" : "block";
-        }
-
-        // Fecha o menu se clicar fora dele
-        window.addEventListener("click", function (e) {
-            const menu = document.getElementById("perfil-menu");
-            const icon = document.querySelector(".perfil-icone");
-            if (!menu.contains(e.target) && !icon.contains(e.target)) {
-                menu.style.display = "none";
-            }
-        });
-    </script>
-</body>
-</html>
+{% endblock %}
